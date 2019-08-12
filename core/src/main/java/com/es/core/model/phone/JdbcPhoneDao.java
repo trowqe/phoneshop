@@ -14,6 +14,10 @@ public class JdbcPhoneDao implements PhoneDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     public Optional<Phone> get(final Long key) {
         Phone phone = (Phone) jdbcTemplate.queryForObject("select * from phones where id = ?", new Object[]{key}, new BeanPropertyRowMapper(Phone.class));
         phone.setColors(getColorSetByPhoneId(key));

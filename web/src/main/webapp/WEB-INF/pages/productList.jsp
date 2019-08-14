@@ -4,6 +4,8 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -13,57 +15,65 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
 </head>
 <body>
 <p>
     Hello from product list!
 </p>
 
-<div class="input-group">
-    <input type="text" class="form-control" id="searchInput"
+<form class="form-inline" action="${pageContext.request.contextPath}/productList" method="GET">
+    <button type="submit" class="btn btn-default btn-sm">
+        <span class="glyphicon glyphicon-search"></span> Search
+    </button>
+    <input type="text" class="form-control" name="userSearch"
            placeholder="Search for phone.."/>
-</div>
+</form>
 
 <p>
     Found
     <c:out value="${phones.size()}"/> phones.
 </p>
-<table border="1px" id="phoneTable">
+<table border="1px" id="phoneTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
     <tr>
         <td>Image</td>
         <td>Brand
-            <button type="button" class="btn btn-default btn-sm">
+            <a href="${pageContext.request.contextPath}/productList?sort=BRAND&type=DESC">
                 <span class="glyphicon glyphicon-arrow-down"></span>
-            </button>
-            <button type="button" class="btn btn-default btn-sm">
+            </a>
+            <a href="${pageContext.request.contextPath}/productList?sort=BRAND&type=ASC">
                 <span class="glyphicon glyphicon-arrow-up"></span>
-            </button>
+            </a>
         </td>
         <td>Model
-            <button type="button" class="btn btn-default btn-sm">
+            <a href="${pageContext.request.contextPath}/productList?sort=MODEL&type=DESC">
                 <span class="glyphicon glyphicon-arrow-down"></span>
-            </button>
-            <button type="button" class="btn btn-default btn-sm">
+            </a>
+            <a href="${pageContext.request.contextPath}/productList?sort=MODEL&type=ASC">
                 <span class="glyphicon glyphicon-arrow-up"></span>
-            </button>
+            </a>
         </td>
         <td>Color</td>
         <td>Display size
-            <button type="button" class="btn btn-default btn-sm">
+            <a href="${pageContext.request.contextPath}/productList?sort=DISPLAY_SIZE&type=DESC">
                 <span class="glyphicon glyphicon-arrow-down"></span>
-            </button>
-            <button type="button" class="btn btn-default btn-sm">
+            </a>
+            <a href="${pageContext.request.contextPath}/productList?sort=DISPLAY_SIZE&type=ASC">
                 <span class="glyphicon glyphicon-arrow-up"></span>
-            </button>
+            </a>
         </td>
         <td>Price
-            <button type="button" class="btn btn-default btn-sm">
+            <a href="${pageContext.request.contextPath}/productList?sort=PRICE&type=DESC">
                 <span class="glyphicon glyphicon-arrow-down"></span>
-            </button>
-            <button type="button" class="btn btn-default btn-sm">
+            </a>
+            <a href="${pageContext.request.contextPath}/productList?sort=PRICE&type=ASC">
                 <span class="glyphicon glyphicon-arrow-up"></span>
-            </button>
+            </a>
         </td>
         <td>Quantity</td>
         <td>Action</td>
@@ -88,6 +98,16 @@
         </tr>
     </c:forEach>
 </table>
+
+<script>
+    $(document).ready(function() {
+        $('#phoneTable').DataTable( {
+            "pagingType": "full_numbers",
+            "bFilter": false,
+            "ordering" : false
+        } );
+    } );
+</script>
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-package com.es.core.model.phone;
+package com.es.core.dao.phone;
 
 public enum SortType {
     DESC("desc"),

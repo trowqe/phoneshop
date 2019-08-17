@@ -22,9 +22,6 @@
 
 </head>
 <body>
-<p>
-    Hello from product list!
-</p>
 
 <form class="form-inline" action="${pageContext.request.contextPath}/productList" method="GET">
     <button type="submit" class="btn btn-default btn-sm">

@@ -1,7 +1,8 @@
-package com.es.core.service;
+package com.es.core.service.phone;
 
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.SortType;
+import com.es.core.dao.phone.SortField;
+import com.es.core.dao.phone.SortType;
 
 
 import java.util.List;

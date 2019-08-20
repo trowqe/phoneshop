@@ -80,7 +80,7 @@ public class JdbcPhoneDaoTest {
         String sql2 = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql2, id2, 5, 5);
 
-        List<Phone> twoPhoneList = jdbcPhoneDao.findAll(0, 3);
+        List<Phone> twoPhoneList = jdbcPhoneDao.findAll(0, 3, "", SortField.PHONE_ID, SortType.ASC);
         assertEquals(2, twoPhoneList.size());
     }
 
@@ -102,10 +102,11 @@ public class JdbcPhoneDaoTest {
         String sql2 = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql2, id2, 5, 5);
 
-        List<Phone> list = jdbcPhoneDao.sortByField(SortField.PRICE, SortType.DESC, 2);
+        List<Phone> list = jdbcPhoneDao.findAll(0, 2, "", SortField.PRICE, SortType.DESC);
 
         assertEquals(-1, (list.get(0).getPrice().compareTo( list.get(1).getPrice())));
     }
+
 
     @Test
     public void userSearchByModel(){
@@ -125,13 +126,16 @@ public class JdbcPhoneDaoTest {
         String sql2 = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql2, id2, 5, 5);
 
-        List<Phone> list = jdbcPhoneDao.userSearchByModel("moto", 2);
+        List<Phone> list = jdbcPhoneDao.findAll(0, 10, "moto", SortField.PHONE_ID, SortType.ASC);
         assertEquals(2, list.size());
     }
 
+
     @Test
     public void userBadSearchByModel(){
-        List<Phone> list = jdbcPhoneDao.userSearchByModel("sdjfsbdfo", 2);
+        List<Phone> list = jdbcPhoneDao.findAll(0, 10, "lalallallalalala", SortField.PHONE_ID, SortType.ASC);
         assertEquals(0, list.size());
     }
+
+
 }

@@ -19,7 +19,7 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-
+    <jsp:include page="header/header.jsp">
 </head>
 <body>
 
@@ -30,6 +30,8 @@
     <input type="text" class="form-control" name="userSearch"
            placeholder="Search for phone.."/>
 </form>
+
+<p id="id"></p>
 
 <p>
     Found
@@ -90,8 +92,8 @@
             </td>
             <td>${phone.displaySizeInches}</td>
             <td>${phone.price}</td>
-            <td><input type="text" value="1"></td>
-            <td><input type="button" value="Add to" onClick=""></td>
+            <td><input type="text" name="quantity" id="${phone.id}" value="1"></td>
+            <td><input type="button" value="Add to" id="${phone.id}" onClick="addToCart(this.id)"></td>
         </tr>
     </c:forEach>
 </table>
@@ -104,6 +106,27 @@
             "ordering" : false
         } );
     } );
+
+    function addToCart(phoneId) {
+        var phoneId = phoneId;
+        var quantity = document.getElementById(phoneId).value;
+        var cartItem = new Object();
+        cartItem.phoneId = phoneId;
+        cartItem.quantity= quantity;
+        $.ajax({
+            url: "ajaxCart",
+            type: "GET",
+            data: jQuery.param({ phoneId: phoneId, quantity: quantity}) ,
+            contentType: 'application/json; charset=utf-8',
+
+            success: function (data) {
+                $("#id").html(data);
+            },
+            error: function (e) {
+                alert('error');
+            }
+        });
+    }
 </script>
 
 </body>

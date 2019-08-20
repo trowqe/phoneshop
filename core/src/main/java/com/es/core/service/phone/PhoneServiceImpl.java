@@ -16,16 +16,10 @@ public class PhoneServiceImpl implements PhoneService {
     PhoneDao phoneDao;
 
     @Override
-    public List<Phone> findAll(int offset, int limit) {
-        return phoneDao.findAll(0, 1000);
-    }
-
-    @Override
-    public List<Phone> sort(SortField sortField, SortType sortType) {
-        int limit = 300;
-        List<Phone> phones = null;
-        phones = phoneDao.sortByField(sortField, sortType, limit);
-        return phones;
+    public List<Phone> findAll(int offset, int limit, String userInput, SortField sortField, SortType sortType) {
+        return phoneDao.findAll(0, 1000, userInput, sortField, sortType);
     }
 
 }
+
+

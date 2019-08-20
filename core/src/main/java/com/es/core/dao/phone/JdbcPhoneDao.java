@@ -54,12 +54,13 @@ public class JdbcPhoneDao implements PhoneDao {
         return (Long) keyHolder.getKey();
     }
 
-    public List<Phone> findAll(int offset, int limit) {
+    public List<Phone> findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType) {
        String SQL = "SELECT * FROM phones LEFT JOIN phone2color ON phones.id=phone2color.phoneId " +
                 "LEFT JOIN colors ON phone2color.colorId = colors.id " +
                 "WHERE phones.price > 0 AND " +
                 "((SELECT stocks.stock FROM stocks WHERE stocks.phoneId = phones.id) > 0 )" +
-            "OFFSET " + offset + " LIMIT " + limit;
+               " AND model LIKE '%" + searchString.trim() + "%' " +
+               "ORDER BY UPPER( " +sortField.field + " ) " + sortType.type + " LIMIT " + limit +  " OFFSET " + offset ;
        try {
            List<Phone> phones = (List<Phone>) jdbcTemplate.query(SQL, new PhoneResultSetExtractor());
            return phones;
@@ -68,7 +69,7 @@ public class JdbcPhoneDao implements PhoneDao {
        }
     }
 
-    @Override
+  /*  @Override
     public List<Phone> sortByField(SortField sortField, SortType sortType, int limit) {
         String SQL = "SELECT * FROM phones LEFT JOIN phone2color ON phones.id=phone2color.phoneId " +
                 "LEFT JOIN colors ON phone2color.colorId = colors.id " +
@@ -82,8 +83,9 @@ public class JdbcPhoneDao implements PhoneDao {
             return new ArrayList<>();
         }
     }
+   */
 
-    @Override
+  /*  @Override
     public List<Phone> userSearchByModel(String searchString, int limit) {
         String SQL = "SELECT * FROM phones LEFT JOIN phone2color ON phones.id=phone2color.phoneId " +
                 "LEFT JOIN colors ON phone2color.colorId = colors.id " +
@@ -97,4 +99,6 @@ public class JdbcPhoneDao implements PhoneDao {
             return new ArrayList<>();
         }
     }
+
+   */
 }

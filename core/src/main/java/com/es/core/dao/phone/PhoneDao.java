@@ -8,9 +8,5 @@ import java.util.Optional;
 public interface PhoneDao {
     Optional<Phone> get(Long key);
     Long save(Phone phone);
-    List<Phone> findAll(int offset, int limit);
-
-    List<Phone> sortByField(SortField sortField, SortType sortType, int limit);
-
-    List<Phone> userSearchByModel(String searchString, int limit);
+    List<Phone> findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType);
 }

@@ -2,6 +2,8 @@ package com.es.core.model.order;
 
 import com.es.core.model.phone.Phone;
 
+import javax.validation.constraints.Pattern;
+
 public class OrderItem {
     private Long id;
     private Phone phone;

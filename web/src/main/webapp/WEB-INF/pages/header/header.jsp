@@ -3,15 +3,23 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 </head>
 <body>
 
 <div>
-    <label for="cart">My cart:</label>
-    <input type="text" id="cart" name="cart" placeholder="0" readonly>
-    <label for="items">items:</label>
-    <input type="text" id="items" name="items" placeholder="0" readonly>
+    <c:set var="cart" value="${sessionScope.cart}"/>
+    <span>
+    <label>items: </label>
+    <p id="totalQuantity">${cart.totalQuantity}</p>
+    <label>sum: </label>
+    <p id="totalSum">${cart.totalSum}<p>
+    </span>
 </div>
 
 </body>

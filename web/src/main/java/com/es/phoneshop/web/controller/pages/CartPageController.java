@@ -4,6 +4,7 @@ import com.es.core.service.cart.CartService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import javax.annotation.Resource;
 
@@ -12,11 +13,15 @@ import javax.annotation.Resource;
 public class CartPageController {
     @Resource
     private CartService cartService;
-
+/*
     @RequestMapping(method = RequestMethod.GET)
     public void getCart() { cartService.getCart(); }
 
     @RequestMapping(method = RequestMethod.PUT)
     public void updateCart() { cartService.update(null);
+
+
     }
+
+ */
 }

@@ -21,9 +21,10 @@ public class AjaxCartController {
     public @ResponseBody
     String addToCart(@ModelAttribute("cart") Cart cart,
                      @RequestParam("phoneId") Long phoneId,
-                     @Valid @RequestParam("quantity") Long quantity) {
+                     @Valid @RequestParam("quantity") Long quantity) throws Exception {
         CartItem cartItem = new CartItem(phoneId, quantity);
         cart.addItem(cartItem);
         return "productList";
     }
+
 }

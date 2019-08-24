@@ -103,7 +103,10 @@
         var totalSumBefore = parseFloat(document.getElementById("totalSum").innerText);
         var quantity =  parseInt(document.getElementById(phoneId).value)
         var quantityAfter = quantity + quantityBefore;
-        var totalSumAfter = totalSumBefore + parseFloat(phonePrice) * quantity ;
+        var totalSumAfter = totalSumBefore + (parseFloat(phonePrice) * quantity) ;
+
+        document.getElementById("totalQuantity").innerHTML = quantityAfter;
+        document.getElementById("totalSum").innerHTML = totalSumAfter;
 
         $.getJSON(
             "ajaxCart",
@@ -113,8 +116,6 @@
             }
         )
 
-        document.getElementById("totalQuantity").innerHTML = quantityAfter;
-        document.getElementById("totalSum").innerHTML = totalSumAfter;
 
     }
 

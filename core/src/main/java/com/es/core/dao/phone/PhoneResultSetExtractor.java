@@ -4,23 +4,25 @@ import com.es.core.model.phone.Color;
 import com.es.core.model.phone.Phone;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class PhoneResultSetExtractor implements ResultSetExtractor {
+public class PhoneResultSetExtractor implements ResultSetExtractor<Optional<Phone>> {
+
 
     @Override
-    public List<Phone> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
+    public Optional<Phone> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
         if (!resultSet.isBeforeFirst()) {
-            throw new EmptyResultDataAccessException(0);
+            return Optional.empty();
         } else {
-            Set<Phone> phoneSet = new LinkedHashSet();
-            Map<Long, Set<Color>> colorsMap = new HashMap();
+            Phone phone = new Phone();
+            Set<Color> colors = new HashSet<>();
+
             while (resultSet.next()) {
-                Phone phone = new Phone();
                 phone.setId(resultSet.getLong("id"));
                 phone.setBrand(resultSet.getString("brand"));
                 phone.setModel(resultSet.getString("model"));
@@ -48,30 +50,21 @@ public class PhoneResultSetExtractor implements ResultSetExtractor {
                 phone.setImageUrl(resultSet.getString("imageUrl"));
                 phone.setDescription(resultSet.getString("description"));
 
-                phoneSet.add(phone);
 
-                if (new Long(resultSet.getLong("colorId")).equals(null)) {
+                if (Long.valueOf(resultSet.getLong("colorId")).equals(null)) {
                 } else {
                     Color color = new Color();
                     color.setId(resultSet.getLong("colorId"));
                     color.setCode(resultSet.getString("code"));
-
-                    if (colorsMap.containsKey(phone.getId())) {
-                        Set<Color> colorSet = colorsMap.get(phone.getId());
-                        colorSet.add(color);
-                        colorsMap.put(phone.getId(), colorSet);
-                    } else {
-                        Set<Color> colorSet = new HashSet();
-                        colorSet.add(color);
-                        colorsMap.put(phone.getId(), colorSet);
-                    }
+                    colors.add(color);
                 }
             }
-            List<Phone> phones = new ArrayList<>(phoneSet);
-            for (Phone p : phones) {
-                p.setColors(colorsMap.get(p.getId()));
+
+            if (colors.size() > 0) {
+                phone.setColors(colors);
             }
-            return phones;
+            return Optional.of(phone);
         }
     }
+
 }

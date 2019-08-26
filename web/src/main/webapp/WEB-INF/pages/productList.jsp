@@ -26,6 +26,23 @@
     Found
     <c:out value="${phones.size()}"/> phones.
 </p>
+
+
+<table border="1" cellpadding="5" cellspacing="5">
+    <tr>
+        <c:forEach begin="1" end="${bookPage.totalPages}" var="i">
+            <c:choose>
+                <c:when test="${bookPage.number eq i}">
+                    <td>${i}</td>
+                </c:when>
+                <c:otherwise>
+                    <td><a href="${pageContext.request.contextPath}/productList/page/${i}">${i}</a></td>
+                </c:otherwise>
+            </c:choose>
+        </c:forEach>
+    </tr>
+</table>
+
 <table border="1px" id="phoneTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
     <tr>
@@ -67,7 +84,7 @@
         <td>Action</td>
     </tr>
     </thead>
-    <c:forEach var="phone" items="${phones}">
+    <c:forEach var="phone" items="${bookPage.content}">
         <tr>
             <td>
                 <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
@@ -87,6 +104,7 @@
     </c:forEach>
 </table>
 
+<!--
 <script>
     $(document).ready(function () {
         $('#phoneTable').DataTable({
@@ -96,6 +114,7 @@
         });
     });
 </script>
+-->
 <script>
     function addToCart(phoneId, phonePrice) {
 

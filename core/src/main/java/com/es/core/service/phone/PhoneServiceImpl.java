@@ -6,6 +6,7 @@ import com.es.core.dao.phone.PhoneDao;
 import com.es.core.dao.phone.SortField;
 import com.es.core.dao.phone.SortType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +24,18 @@ public class PhoneServiceImpl implements PhoneService {
     @Autowired
     private PhoneDao phoneDao;
 
+    @Value("${findAll.limit}")
+    private Integer limit;
+
     @Override
-    public List<Phone> findAll(int offset, int limit, String userInput, SortField sortField, SortType sortType) {
+    public Phone get(Long id) {
+        Optional<Phone> phone = phoneDao.get(id);
+        if(!phone.isPresent()) throw new ItemNotFoundException("phone dao can't find phone with id: " + id);
+        return phone.get();
+    }
+
+    @Override
+    public List<Phone> findAll(int offset, String userInput, SortField sortField, SortType sortType) {
         Optional<List<Phone>> phonesOptionalList = phoneDao.findAll(offset, limit, userInput, sortField, sortType);
         books = phonesOptionalList.get();
         if (phonesOptionalList.isPresent()) {

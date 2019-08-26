@@ -2,21 +2,22 @@ package com.es.core.model.cartItem;
 
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 public class CartItem {
     private Long itemId;
 
-    @NotNull
-    @Min(1)
-    @Max(5)
+   // @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="msg")
+    @Min(value = 1, message = "error quantity can be zero")
+  //  @NotBlank(message="eeeeeeee")
     private Long itemQuantity;
 
-    public CartItem(Long itemId, @NotNull @Min(1) @Max(5) Long itemQuantity) {
+    public CartItem(Long itemId, Long itemQuantity) {
         this.itemId = itemId;
         this.itemQuantity = itemQuantity;
+    }
+
+    public CartItem() {
     }
 
     public Long getItemId() {

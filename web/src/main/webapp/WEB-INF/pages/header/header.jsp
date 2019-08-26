@@ -12,8 +12,9 @@
 </head>
 <body>
 
+<%--
 <div>
-    <c:set var="cart" value="${sessionScope.cart}"/>
+   <c:set var="cart" value="${sessionScope.cart}"/>
     <span>
     <label>items: </label>
     <p id="totalQuantity">${cart.totalQuantity}</p>
@@ -21,6 +22,15 @@
     <p id="totalSum">${cart.totalSum}<p>
     </span>
 </div>
+--%>
 
+<div>
+    <span>
+    <label>items: </label>
+    <p id="totalQuantity">0</p>
+    <label>sum: </label>
+    <p id="totalSum">0<p>
+    </span>
+</div>
 </body>
 </html>

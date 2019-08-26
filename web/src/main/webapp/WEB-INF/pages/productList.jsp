@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -19,14 +20,9 @@
     <input type="text" class="form-control" id="userSearch" name="userSearch"
            placeholder="Search for phone.."/>
 </form>
-
-<p id="id"></p>
-
-<p>
-    Found
-    <c:out value="${phones.size()}"/> phones.
-</p>
-
+<br>
+<c:set var="one" value="${1}"/>
+<c:set var="curPage" value="${bookPage.number + one}"/>
 
 <table border="1" cellpadding="5" cellspacing="5">
     <tr>
@@ -42,41 +38,40 @@
         </c:forEach>
     </tr>
 </table>
-
+<br>
 <table border="1px" id="phoneTable" class="table table-striped table-bordered" style="width:100%">
     <thead>
     <tr>
         <td>Image</td>
         <td>Brand
-            <a href="${pageContext.request.contextPath}/productList?sort=BRAND&type=DESC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=BRAND&type=DESC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-down"></span>
             </a>
-            <a href="${pageContext.request.contextPath}/productList?sort=BRAND&type=ASC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=BRAND&type=ASC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-up"></span>
             </a>
         </td>
         <td>Model
-            <a href="${pageContext.request.contextPath}/productList?sort=MODEL&type=DESC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=MODEL&type=DESC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-down"></span>
             </a>
-            <a href="${pageContext.request.contextPath}/productList?sort=MODEL&type=ASC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=MODEL&type=ASC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-up"></span>
             </a>
         </td>
-        <td>Color</td>
         <td>Display size
-            <a href="${pageContext.request.contextPath}/productList?sort=DISPLAY_SIZE&type=DESC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=DISPLAY_SIZE&type=DESC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-down"></span>
             </a>
-            <a href="${pageContext.request.contextPath}/productList?sort=DISPLAY_SIZE&type=ASC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=DISPLAY_SIZE&type=ASC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-up"></span>
             </a>
         </td>
         <td>Price
-            <a href="${pageContext.request.contextPath}/productList?sort=PRICE&type=DESC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=PRICE&type=DESC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-down"></span>
             </a>
-            <a href="${pageContext.request.contextPath}/productList?sort=PRICE&type=ASC&userSearch=${param.userSearch}">
+            <a href="${pageContext.request.contextPath}/productList/page/${curPage}?sort=PRICE&type=ASC&userSearch=${param.userSearch}">
                 <span class="glyphicon glyphicon-arrow-up"></span>
             </a>
         </td>
@@ -91,54 +86,62 @@
             </td>
             <td>${phone.brand}</td>
             <td>${phone.model}</td>
-            <td>
-                <c:forEach var="color" items="${phone.colors}">
-                    ${color.code},
-                </c:forEach>
-            </td>
             <td>${phone.displaySizeInches}</td>
-            <td>${phone.price}</td>
-            <td><input type="text" name="quantity" id="${phone.id}" value="1"></td>
-            <td><input type="button" value="Add to" onClick="addToCart('${phone.id}', '${phone.price}')"></td>
+            <td><p id = ${phone.id}p>${phone.price}</p></td>
+            <td>
+                <form:form method="post" modelAttribute="cartItem" action="${pageContext.request.contextPath}/ajaxCart'" >
+                    <form:input path="itemQuantity" type="text" id="${phone.id}q"/>
+                    <form:errors path="itemQuantity"/>
+                    <form:button id="${phone.id}" >Add</form:button>
+                </form:form>
+            </td>
         </tr>
     </c:forEach>
 </table>
 
-<!--
+
 <script>
     $(document).ready(function () {
-        $('#phoneTable').DataTable({
-            "pagingType": "full_numbers",
-            "bFilter": false,
-            "ordering": false
+
+        $("button").click(function (e) {
+
+            e.preventDefault();
+            var phoneId =  parseInt(this.id);
+            var quantity = parseInt(document.getElementById(this.id+'q').value);
+            var price = parseFloat(document.getElementById(this.id+'p').textContent);
+            var quantityBefore = parseInt(document.getElementById("totalQuantity").innerText);
+            var totalSumBefore = parseFloat(document.getElementById("totalSum").innerText);
+
+            var quantityAfter = parseInt(quantity + quantityBefore);
+            var totalSumAfter = parseFloat(totalSumBefore + price * quantity);
+            document.getElementById("totalQuantity").innerHTML = quantityAfter;
+            document.getElementById("totalSum").innerHTML = totalSumAfter;
+
+            var cartItem = {
+                itemId: phoneId,
+                itemQuantity: quantity
+            };
+
+            console.log(cartItem);
+
+            $.ajax({
+                type: 'POST',
+                url: '${pageContext.request.contextPath}/ajaxCart',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify(cartItem),
+                success: function (data) {
+                    console.log("post resp " + data);
+                }, error: function (jqXHR, textStatus, errorThrown) {
+                }
+            });
         });
     });
-</script>
--->
-<script>
-    function addToCart(phoneId, phonePrice) {
 
-        var quantityBefore = parseInt(document.getElementById("totalQuantity").innerText);
-        var totalSumBefore = parseFloat(document.getElementById("totalSum").innerText);
-        var quantity =  parseInt(document.getElementById(phoneId).value)
-        var quantityAfter = quantity + quantityBefore;
-        var totalSumAfter = totalSumBefore + (parseFloat(phonePrice) * quantity) ;
-
-        document.getElementById("totalQuantity").innerHTML = quantityAfter;
-        document.getElementById("totalSum").innerHTML = totalSumAfter;
-
-        $.getJSON(
-            "ajaxCart",
-            {phoneId: phoneId, quantity: quantity},
-            function (data) {
-                alert('ok' + data);
-            }
-        )
-
-
-    }
 
 </script>
+
 
 </body>
 </html>

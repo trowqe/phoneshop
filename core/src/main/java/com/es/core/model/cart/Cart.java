@@ -18,6 +18,24 @@ public class Cart {
 
     private Map<Long, Long> items = new HashMap<>();
 
+    private BigDecimal totalSum;
+    private Long totalItems;
+
+    public BigDecimal getTotalSum() {
+        return totalSum;
+    }
+
+    public void setTotalSum(BigDecimal totalSum) {
+        this.totalSum = totalSum;
+    }
+
+    public Long getTotalItems() {
+        return totalItems;
+    }
+
+    public void setTotalItems(Long totalItems) {
+        this.totalItems = totalItems;
+    }
 
     public void addItem(Long itemId, Long quantity) {
         if (items.containsKey(itemId)) {
@@ -35,8 +53,7 @@ public class Cart {
         } else throw new ItemNotFoundException("cant delete not existing id");
     }
 
-    public List<CartItem> getItems() {
-        return new ArrayList(items.entrySet());
+    public Map<Long, Long> getItems() {
+        return items;
     }
-
 }

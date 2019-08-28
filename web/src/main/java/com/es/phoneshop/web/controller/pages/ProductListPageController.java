@@ -26,7 +26,6 @@ import java.util.stream.IntStream;
 
 @Controller
 @EnableWebMvc
-@SessionAttributes({"userId", "cart"})
 @RequestMapping(value = "/productList")
 public class ProductListPageController {
     @Resource
@@ -55,7 +54,7 @@ public class ProductListPageController {
 
         int totalPages = phonePage.getTotalPages();
 
-        if(curPage>totalPages){
+        if (curPage > totalPages) {
             throw new ItemNotFoundException("wrong page number");
         }
 
@@ -66,8 +65,7 @@ public class ProductListPageController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
 
-        model.addAttribute("cartItem", new CartItem(0L, 0L));
-
+        model.addAttribute("cartItem", new CartItem());
         return "productList";
     }
 

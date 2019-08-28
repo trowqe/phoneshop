@@ -11,6 +11,7 @@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
     <jsp:include page="header/header.jsp"/>
+    <script> <%@ include file="/resources/js/addToCart.js"%> </script>
 </head>
 <body>
 <form class="form-inline" action="${pageContext.request.contextPath}/productList" method="GET">
@@ -82,65 +83,25 @@
     <c:forEach var="phone" items="${bookPage.content}">
         <tr>
             <td>
-                <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                <a href="${pageContext.request.contextPath}/productDetails/${phone.id}">
+                    <img src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${phone.imageUrl}">
+                </a>
             </td>
             <td>${phone.brand}</td>
             <td>${phone.model}</td>
             <td>${phone.displaySizeInches}</td>
-            <td><p id = ${phone.id}p>${phone.price}</p></td>
+            <td><p id=${phone.id}p>${phone.price}</p></td>
             <td>
-                <form:form method="post" modelAttribute="cartItem" action="${pageContext.request.contextPath}/ajaxCart'" >
-                    <form:input path="itemQuantity" type="text" id="${phone.id}q"/>
-                    <form:errors path="itemQuantity"/>
-                    <form:button id="${phone.id}" >Add</form:button>
-                </form:form>
+                <form:form method="post" modelAttribute="cartItem"
+                           action="${pageContext.request.contextPath}/ajaxCart">
+                <form:input path="itemQuantity" id="${phone.id}q"/>
+                <form:errors path="itemQuantity" cssClass="error"/></td>
+            <td><form:button id="${phone.id}">Add</form:button>
+                </form:form></td>
             </td>
         </tr>
     </c:forEach>
 </table>
-
-
-<script>
-    $(document).ready(function () {
-
-        $("button").click(function (e) {
-
-            e.preventDefault();
-            var phoneId =  parseInt(this.id);
-            var quantity = parseInt(document.getElementById(this.id+'q').value);
-            var price = parseFloat(document.getElementById(this.id+'p').textContent);
-            var quantityBefore = parseInt(document.getElementById("totalQuantity").innerText);
-            var totalSumBefore = parseFloat(document.getElementById("totalSum").innerText);
-
-            var quantityAfter = parseInt(quantity + quantityBefore);
-            var totalSumAfter = parseFloat(totalSumBefore + price * quantity);
-            document.getElementById("totalQuantity").innerHTML = quantityAfter;
-            document.getElementById("totalSum").innerHTML = totalSumAfter;
-
-            var cartItem = {
-                itemId: phoneId,
-                itemQuantity: quantity
-            };
-
-            console.log(cartItem);
-
-            $.ajax({
-                type: 'POST',
-                url: '${pageContext.request.contextPath}/ajaxCart',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                data: JSON.stringify(cartItem),
-                success: function (data) {
-                    console.log("post resp " + data);
-                }, error: function (jqXHR, textStatus, errorThrown) {
-                }
-            });
-        });
-    });
-
-
-</script>
 
 
 </body>

@@ -10,8 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -34,11 +33,9 @@ public class JdbcPhoneDaoTest {
         phone.setModel("x style");
         phone.setPrice(new BigDecimal(10));
         Long id = jdbcPhoneDao.save(phone);
-        System.out.println(id);
         String sql = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, id, 5, 5);
         Optional<Phone> testPhone = jdbcPhoneDao.get(id);
-        System.out.println(testPhone.toString());
         assertTrue(testPhone.isPresent());
     }
 
@@ -58,7 +55,6 @@ public class JdbcPhoneDaoTest {
     @Test
     public void getNotExisting() {
         Optional<Phone> testPhone = jdbcPhoneDao.get(-2000L);
-        System.out.println(testPhone);
         assertEquals(Optional.empty(), testPhone);
     }
 
@@ -137,5 +133,45 @@ public class JdbcPhoneDaoTest {
         assertTrue(list.get().isEmpty());
     }
 
+    @Test
+    public void countTotalPrice() {
+        Phone phone1 = new Phone();
+        phone1.setBrand("1");
+        phone1.setModel("1");
+        phone1.setPrice(BigDecimal.valueOf(10.0));
+        Long id1 = jdbcPhoneDao.save(phone1);
+        Phone phone2 = new Phone();
+        phone2.setBrand("2");
+        phone2.setModel("2");
+        phone2.setPrice(BigDecimal.valueOf(20.0));
+        Long id2 = jdbcPhoneDao.save(phone2);
+        Phone phone3 = new Phone();
+        phone3.setBrand("3");
+        phone3.setModel("3");
+        phone3.setPrice(BigDecimal.valueOf(30.0));
+        Long id3 = jdbcPhoneDao.save(phone3);
+
+        List<Long> ids = new ArrayList();
+        ids.add(id1);
+        ids.add(id2);
+        ids.add(id3);
+
+        Map<Long, BigDecimal> map = new HashMap();
+        map.put(id1, phone1.getPrice());
+        map.put(id2, phone2.getPrice());
+        map.put(id3, phone3.getPrice());
+
+        assertEquals(map, jdbcPhoneDao.countTotalPriceByPhoneIds(ids).get());
+    }
+
+    @Test
+    public void countTotalPriceInvalidIds() {
+        List<Long> ids = new ArrayList();
+        ids.add(12L);
+        ids.add(18L);
+        ids.add(20L);
+
+        assertEquals(Optional.empty(), jdbcPhoneDao.countTotalPriceByPhoneIds(ids));
+    }
 
 }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public class HttpSessionCartService implements CartService {
     private Cart cart;
 
     @Autowired
-    PhoneDao phoneDao;
+    private PhoneDao phoneDao;
 
     @Override
     public void addPhone(Long phoneId, Long quantity) {
@@ -45,7 +44,7 @@ public class HttpSessionCartService implements CartService {
     @Override
     public BigDecimal countTotalSum() {
         Map<Long, Long> items = cart.getItems();
-        List<Long> ids =  items.keySet().stream().collect(Collectors.toList());
+        List<Long> ids = items.keySet().stream().collect(Collectors.toList());
         Optional<Map<Long, BigDecimal>> pricesByIdOptional = (phoneDao.countTotalPriceByPhoneIds(ids));
         if (!pricesByIdOptional.isPresent()) return BigDecimal.ZERO;
         Map<Long, BigDecimal> pricesById = pricesByIdOptional.get();

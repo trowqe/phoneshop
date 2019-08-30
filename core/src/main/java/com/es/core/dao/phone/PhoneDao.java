@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface PhoneDao {
     Optional<Phone> get(Long key);
     Long save(Phone phone);
-    Optional<List<Phone>> findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType);
-    Optional<Map<Long, BigDecimal>> countTotalPriceByPhoneIds(List<Long> idList);
+    Optional findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType);
+    Optional countTotalPriceByPhoneIds(List<Long> idList);
 }

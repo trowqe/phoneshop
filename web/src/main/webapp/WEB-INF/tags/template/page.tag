@@ -1,5 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,20 +9,10 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+    <script> <%@ include file="/resources/js/addToCart.js"%> </script>
 </head>
 <body>
-
-<%--
-<div>
-   <c:set var="cart" value="${sessionScope.cart}"/>
-    <span>
-    <label>items: </label>
-    <p id="totalQuantity">${cart.totalQuantity}</p>
-    <label>sum: </label>
-    <p id="totalSum">${cart.totalSum}<p>
-    </span>
-</div>
---%>
 
 <div>
     <span>
@@ -32,5 +22,6 @@
     <p id="totalSum">0<p>
     </span>
 </div>
+<jsp:doBody/>
 </body>
 </html>

@@ -8,7 +8,9 @@ import com.es.core.dao.phone.SortType;
 import java.util.List;
 
 public interface PhoneService {
-    List<Phone> findAll(int offset, int limit);
+    Phone get(Long id);
 
-    List<Phone> sort(SortField sortField, SortType sortType);
+    List<Phone> findAll(int offset, String userSearch, SortField sortField, SortType sortType);
+
+    List<Phone> paginatedPhoneList(int pageSize, int currentPage, String userInput, SortField sortField, SortType sortType);
 }

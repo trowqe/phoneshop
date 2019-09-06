@@ -10,18 +10,19 @@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 
-    <script> <%@ include file="/resources/js/addToCart.js"%> </script>
 </head>
 <body>
 
 <div>
-    <span>
+    <a href="${pageContext.request.contextPath}/cartPage/">
     <label>items: </label>
-    <p id="totalQuantity">0</p>
+    <p id="totalQuantity">${cartView.totalItems}</p>
     <label>sum: </label>
-    <p id="totalSum">0<p>
-    </span>
+    <p id="totalSum">${cartView.totalSum}<p>
+    </a>
 </div>
+
+
 <jsp:doBody/>
 </body>
 </html>

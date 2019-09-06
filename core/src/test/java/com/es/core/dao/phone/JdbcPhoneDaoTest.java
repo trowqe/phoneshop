@@ -12,7 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -25,6 +26,77 @@ public class JdbcPhoneDaoTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Test
+    public void countEmptyTable() {
+        Long count = jdbcPhoneDao.countAllPhones("");
+        assertEquals(Long.valueOf(0), count);
+    }
+
+    @Test
+    public void countThreeOfThree() {
+        String sql = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
+
+        Phone phone1 = new Phone();
+        phone1.setBrand("motorola");
+        phone1.setModel("x style");
+        phone1.setPrice(BigDecimal.valueOf(10));
+        Long id1 = jdbcPhoneDao.save(phone1);
+        jdbcTemplate.update(sql, id1, 5, 5);
+
+        Phone phone2 = new Phone();
+        phone2.setBrand("motorola2");
+        phone2.setModel("x style2");
+        phone2.setPrice(BigDecimal.valueOf(10));
+        Long id2 = jdbcPhoneDao.save(phone2);
+        jdbcTemplate.update(sql, id2, 5, 5);
+
+        Phone phone3 = new Phone();
+        phone3.setBrand("motorola3");
+        phone3.setModel("x style3");
+        phone3.setPrice(BigDecimal.valueOf(10));
+        Long id3 = jdbcPhoneDao.save(phone3);
+        jdbcTemplate.update(sql, id3, 5, 5);
+
+        Long count = jdbcPhoneDao.countAllPhones("");
+        assertEquals(Long.valueOf(3), count);
+    }
+
+    @Test
+    public void countTwoOfFour() {
+        String sql = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
+
+        Phone phone1 = new Phone();
+        phone1.setBrand("motorola");
+        phone1.setModel("x style");
+        phone1.setPrice(BigDecimal.valueOf(10));
+        Long id1 = jdbcPhoneDao.save(phone1);
+        jdbcTemplate.update(sql, id1, 5, 5);
+
+        Phone phone2 = new Phone();
+        phone2.setBrand("motorola2");
+        phone2.setModel("x style2");
+        phone2.setPrice(BigDecimal.valueOf(10));
+        Long id2 = jdbcPhoneDao.save(phone2);
+        jdbcTemplate.update(sql, id2, 5, 5);
+
+        Phone phoneWithInvalidStocksLevel = new Phone();
+        phoneWithInvalidStocksLevel.setBrand("motorola3");
+        phoneWithInvalidStocksLevel.setModel("x style3");
+        phoneWithInvalidStocksLevel.setPrice(BigDecimal.valueOf(10));
+        Long id3 = jdbcPhoneDao.save(phoneWithInvalidStocksLevel);
+        jdbcTemplate.update(sql, id3, 0, 0);
+
+        Phone phoneWithNullPrise = new Phone();
+        phoneWithNullPrise.setBrand("motorola4");
+        phoneWithNullPrise.setModel("x style4");
+        phoneWithNullPrise.setPrice(BigDecimal.valueOf(0));
+        Long id4 = jdbcPhoneDao.save(phoneWithNullPrise);
+        jdbcTemplate.update(sql, id4, 5, 5);
+
+        Long count = jdbcPhoneDao.countAllPhones("");
+        assertEquals(Long.valueOf(2), count);
+    }
 
     @Test
     public void save() {
@@ -98,7 +170,7 @@ public class JdbcPhoneDaoTest {
         String sql2 = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql2, id2, 5, 5);
 
-        Optional<List<Phone> >list =jdbcPhoneDao.findAll(0, 2, "", SortField.PRICE, SortType.DESC);
+        Optional<List<Phone>> list = jdbcPhoneDao.findAll(0, 2, "", SortField.PRICE, SortType.DESC);
 
         assertEquals(-1, (list.get().get(0).getPrice().compareTo(list.get().get(1).getPrice())));
     }

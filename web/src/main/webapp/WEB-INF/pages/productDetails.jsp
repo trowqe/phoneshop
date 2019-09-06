@@ -4,7 +4,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <template:page>
-    <a href="${pageContext.request.contextPath}/productList/page/1">back to product list</a>
+
+    <script> <%@ include file="/resources/js/addToCart.js"%> </script>
+
+    <a href="${pageContext.request.contextPath}/productList/">back to product list</a>
 
 
     <div class="container">
@@ -27,12 +30,12 @@
             </div>
 
             <div>
-                <form:form method="post" modelAttribute="cartItem"
-                           action="${pageContext.request.contextPath}/ajaxCart">
-                    <form:input path="itemQuantity" type="text" id="${phone.id}q"/>
-                    <form:errors path="itemQuantity"/>
-                    <form:button id="${phone.id}">Add</form:button>
-                </form:form>
+                    <form:form method="post" modelAttribute="cartItem"
+                               action="${pageContext.request.contextPath}/ajaxCart">
+                    <form:input path="itemQuantity" id="${phone.id}q"/>
+                    <form:errors path="itemQuantity" cssClass="error"/>
+                        <form:button id="${phone.id}">Add</form:button>
+                    </form:form>
             </div>
             <div>
 

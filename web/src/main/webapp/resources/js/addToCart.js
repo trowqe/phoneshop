@@ -13,14 +13,10 @@ $(document).ready(function () {
 
         console.log(cartItem);
 
-
         $.ajax({
             type: 'POST',
-            url: '${pageContext.request.contextPath}/ajaxCart',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            data: JSON.stringify(cartItem),
+            url: '${pageContext.request.contextPath}/ajaxCart/add',
+            data: cartItem,
             success: function (data) {
                 console.log("post resp " + data.hasOwnProperty("totalSum"));
                 console.log(data);
@@ -32,11 +28,10 @@ $(document).ready(function () {
                 document.getElementById("totalQuantity").innerHTML = totalItem;
                 document.getElementById("totalSum").innerHTML = totalSum;
 
-            }, error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
-                alert("wrong input. Number should be between 1 and 100");
+            }, error: function (data) {
+                console.log(data.responseJSON);
+                var errors = data.responseJSON;
+                alert(errors);
             }
         });
 

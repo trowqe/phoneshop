@@ -57,7 +57,7 @@
                 </form:form>
                 <br>
                 <form>
-                    <input type="button" value="Order" onClick="">
+                    <a href="${pageContext.request.contextPath}/order">order</a>
                 </form>
             </c:when>
             <c:otherwise>

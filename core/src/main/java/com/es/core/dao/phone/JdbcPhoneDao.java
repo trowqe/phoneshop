@@ -47,6 +47,7 @@ public class JdbcPhoneDao implements PhoneDao {
             "ORDER BY UPPER ";
     private final String SQL_LIMIT_OFFSET =
             " LIMIT :limit  OFFSET :offset";
+
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -84,7 +85,6 @@ public class JdbcPhoneDao implements PhoneDao {
         parameters.addValue("search", search);
         parameters.addValue("limit", limit);
         parameters.addValue("offset", offset);
-
 
         return Optional.of(namedParameterJdbcTemplate.
                 query(sql, parameters, new BeanPropertyRowMapper(Phone.class)));

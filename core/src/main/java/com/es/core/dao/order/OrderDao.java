@@ -1,7 +1,6 @@
 package com.es.core.dao.order;
 
 import com.es.core.model.order.Order;
-import com.es.core.model.order.OrderItem;
 import com.es.core.model.order.OrderStatus;
 
 import java.util.List;
@@ -12,6 +11,4 @@ public interface OrderDao {
     void save(Order order);
     List<Order> findAll();
     void updateOrderStatus(Long orderId, OrderStatus orderStatus);
-    void saveOrderItems(List<OrderItem> orderItems);
-    List<OrderItem> getOrderItems(Long orderId);
 }

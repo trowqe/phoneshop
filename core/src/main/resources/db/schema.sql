@@ -66,7 +66,6 @@ create table orders (
   lastName VARCHAR(50) NOT NULL,
   deliveryAddress VARCHAR(100) NOT NULL,
   contactPhoneNo VARCHAR(20) NOT NULL,
-  additionalInformation VARCHAR(4096),
   status VARCHAR(50),
   UNIQUE (id)
 );
@@ -74,10 +73,8 @@ create table orders (
 create table orderItems(
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   phoneId BIGINT,
-  orderId BIGINT,
   quantity BIGINT,
   UNIQUE(id),
-  CONSTRAINT FK_orderItems_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT FK_orderItems_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

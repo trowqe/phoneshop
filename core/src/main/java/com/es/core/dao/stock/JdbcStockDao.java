@@ -1,6 +1,6 @@
 package com.es.core.dao.stock;
 
-import com.es.core.model.phone.Stock;
+import com.es.core.model.stock.Stock;
 import com.es.core.service.phone.PhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

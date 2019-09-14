@@ -2,10 +2,11 @@ package com.es.core.dao.stock;
 
 import com.es.core.dao.phone.JdbcPhoneDao;
 import com.es.core.model.phone.Phone;
-import com.es.core.model.phone.Stock;
+import com.es.core.model.stock.Stock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -14,12 +15,15 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/context/applicationContext-coreTest.xml")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class JdbcStockDaoTest {
 
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Autowired
     private JdbcPhoneDao jdbcPhoneDao;
@@ -28,9 +32,15 @@ public class JdbcStockDaoTest {
     private JdbcStockDao jdbcStockDao;
 
     @Test
+    public void testConfiguration(){
+        assertNotNull(applicationContext);
+    }
+
+    @Test
     public void getNotExisting() {
         assertEquals(Optional.empty(), jdbcStockDao.get(Long.valueOf(0)));
     }
+
 
     @Test
     public void update() {

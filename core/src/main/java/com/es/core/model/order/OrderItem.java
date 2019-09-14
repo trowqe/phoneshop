@@ -32,4 +32,14 @@ public class OrderItem {
     public void setQuantity(final Long quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                "id=" + id +
+                ", phone=" + phone +
+                ", order=" + order +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

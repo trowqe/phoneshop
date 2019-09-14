@@ -11,9 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -93,25 +91,5 @@ public class JdbcPhoneDao implements PhoneDao {
     private String likeStatement(String string) {
         if (string == null) return "%";
         return "%" + string.trim() + "%";
-    }
-
-    @Override
-    public Optional countTotalPriceByPhoneIds(List<Long> idList) {
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("phonesIds", idList);
-
-        Map<Long, BigDecimal> map =
-                namedParameterJdbcTemplate.query("SELECT id, price FROM phones WHERE id IN (:phonesIds)",
-                        parameters, resultSet -> {
-                            Map<Long, BigDecimal> resMap = new HashMap<>();
-                            while (resultSet.next()) {
-                                resMap.put(resultSet.getLong("id"),
-                                        resultSet.getBigDecimal("price"));
-                            }
-                            return resMap;
-                        });
-        if (map.size() > 0) {
-            return Optional.of(map);
-        } else return Optional.empty();
     }
 }

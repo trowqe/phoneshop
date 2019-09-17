@@ -2,9 +2,6 @@ package com.es.core.dao.order;
 
 
 import com.es.core.dao.phone.JdbcPhoneDao;
-import com.es.core.model.order.Order;
-import com.es.core.model.order.OrderItem;
-import com.es.core.model.phone.Phone;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +9,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,6 +28,7 @@ public class JdbcOrderDaoTest {
        assertTrue(jdbcOrderDao.findAll().isEmpty());
     }
 
+    /*
     @Test
     public void save(){
         Order order = new Order();
@@ -71,6 +64,8 @@ public class JdbcOrderDaoTest {
             System.out.println(e.toString());});
         assertEquals(1, jdbcOrderDao.findAll().size());
     }
+
+     */
 
 
 }

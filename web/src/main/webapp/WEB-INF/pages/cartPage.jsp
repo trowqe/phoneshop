@@ -4,7 +4,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <template:page>
 
-
     <a href="${pageContext.request.contextPath}/productList/">back to product list</a>
 
     <div class="container">
@@ -45,7 +44,7 @@
 
                                     <td>
                                         <input formmethod="post"
-                                               formaction="<c:url value="/cartPage/delete"/>?phoneId=${phone.id}"
+                                               formaction="<c:url value="/cartPage/deleteItem"/>?phoneId=${phone.id}"
                                                type="submit" value="Delete">
                                     </td>
                                 </tr>
@@ -53,7 +52,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <input type="submit" value="Update" style="width: 100px;">
+                    <input type="submit" value="Update"  onclick="update()" style="width: 100px;">
                 </form:form>
                 <br>
                 <form>
@@ -67,4 +66,5 @@
             </c:otherwise>
         </c:choose>
     </div>
+
 </template:page>

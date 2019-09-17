@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,13 +39,13 @@ public class JdbcPhoneDao implements PhoneDao {
             ":displayTechnology, :backCameraMegapixels, :frontCameraMegapixels, :ramGb, :internalStorageGb, " +
             ":batteryCapacityMah, :talkTimeHours, :standByTimeHours, :bluetooth, :positioning, :imageUrl, " +
             ":description)";
-    private final String SQL_FIND_ALL = "SELECT * FROM phones " +
+
+    final String SQL_FIND_ALL = "SELECT * FROM phones " +
             "WHERE phones.price > 0 AND " +
             "((SELECT SUM(stocks.stock) FROM stocks WHERE stocks.phoneId = phones.id) > 0 )" +
             " AND model LIKE :search " +
-            "ORDER BY UPPER ";
-    private final String SQL_LIMIT_OFFSET =
-            " LIMIT :limit  OFFSET :offset";
+            "ORDER BY UPPER ( %s ) %s LIMIT :limit  OFFSET :offset";
+
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -73,9 +74,9 @@ public class JdbcPhoneDao implements PhoneDao {
         return namedParameterJdbcTemplate.queryForObject(SQL_COUNT_ALL, parameters, Long.class);
     }
 
-    public Optional findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType) {
+    public List findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType) {
 
-        String sql = SQL_FIND_ALL + "( " + sortField.field + " )" + sortType.type + SQL_LIMIT_OFFSET;
+        String sql = String.format(SQL_FIND_ALL, sortField.field, sortType.type);
 
         String search = likeStatement(searchString);
 
@@ -84,8 +85,8 @@ public class JdbcPhoneDao implements PhoneDao {
         parameters.addValue("limit", limit);
         parameters.addValue("offset", offset);
 
-        return Optional.of(namedParameterJdbcTemplate.
-                query(sql, parameters, new BeanPropertyRowMapper(Phone.class)));
+        return namedParameterJdbcTemplate.query(sql, parameters,
+                new BeanPropertyRowMapper<>(Phone.class));
     }
 
     private String likeStatement(String string) {

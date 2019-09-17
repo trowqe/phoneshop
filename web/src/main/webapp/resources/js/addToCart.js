@@ -1,8 +1,8 @@
 $(document).ready(function () {
 
     $("button").click(function (e) {
-
         e.preventDefault();
+        var url = document.getElementById("addForm").getAttribute("action");
         var phoneId = this.id;
         var quantity = document.getElementById(this.id + 'q').value;
 
@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: 'POST',
-            url: '${pageContext.request.contextPath}/ajaxCart/add',
+            url: url,
             data: cartItem,
             success: function (data) {
                 console.log("post resp " + data.hasOwnProperty("totalSum"));
@@ -29,9 +29,9 @@ $(document).ready(function () {
                 document.getElementById("totalSum").innerHTML = totalSum;
 
             }, error: function (data) {
-                console.log(data.responseJSON);
-                var errors = data.responseJSON;
-                alert(errors);
+                console.log(data.responseText);
+                var error = data.responseJSON;
+                alert(error);
             }
         });
 

@@ -17,9 +17,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/productList")
 public class ProductListPageController {
+
     @Resource
     private PhoneService phoneService;
-
 
     @GetMapping
     public String showProductList(Model model,

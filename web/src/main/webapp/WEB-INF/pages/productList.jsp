@@ -2,9 +2,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <template:page>
 
-    <script> <%@ include file="/resources/js/addToCart.js"%> </script>
+
+    <c:set var="url" value="${pageContext.request.contextPath}"/>
+
+    <spring:url value="/resources/js/addToCart.js" var="addToCart"/>
+    <script> var BASE_URL = '${pageContext.request.contextPath}';</script>
+    <script type="text/javascript" src="${addToCart}">
+    </script>
+
 
     <form class="form-inline" action="${pageContext.request.contextPath}/productList?userSearch=${param.userSearch}"
           method="GET">
@@ -86,12 +94,12 @@
                 <td>${phone.displaySizeInches}</td>
                 <td>${phone.price}</td>
                 <td>
-                    <form:form method="post" modelAttribute="cartItem"
-                               action="${pageContext.request.contextPath}/ajaxCart/add">
+                    <form:form method="post" modelAttribute="cartItem" id="addForm"
+                               action="${pageContext.request.contextPath}/ajaxCart/add" >
                     <form:input path="itemQuantity" id="${phone.id}q"/>
                     <form:errors path="itemQuantity" cssClass="error"/></td>
                 <td><form:button id="${phone.id}">Add</form:button>
-                    </form:form></td>
+                    </form:form ></td>
                 </td>
             </tr>
         </c:forEach>

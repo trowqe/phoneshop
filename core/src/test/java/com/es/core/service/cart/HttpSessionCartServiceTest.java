@@ -1,9 +1,8 @@
-package com.es.core.service;
+package com.es.core.service.cart;
 
-import com.es.core.dao.phone.JdbcPhoneDao;
 import com.es.core.model.cart.Cart;
 import com.es.core.model.phone.Phone;
-import com.es.core.service.cart.HttpSessionCartService;
+import com.es.core.service.phone.PhoneService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +33,7 @@ public class HttpSessionCartServiceTest {
     private Cart cart;
 
     @Mock
-    private JdbcPhoneDao phoneDao;
+    private PhoneService phoneService;
 
     @Before
     public void init() {
@@ -124,8 +122,7 @@ public class HttpSessionCartServiceTest {
         phone.setModel("x style");
         phone.setPrice(BigDecimal.valueOf(10));
 
-        when(phoneDao.get(any(Long.class))).thenReturn(Optional.of(phone));
-        //  Mockito.doReturn(price1).when(phoneDao).get(any( Long.class)).get().getPrice();
+        when(phoneService.get(any(Long.class))).thenReturn(phone);
 
         when(cart.getItems()).thenReturn(itemsInCart);
         assertEquals(BigDecimal.valueOf(20), cartService.countTotalSum());

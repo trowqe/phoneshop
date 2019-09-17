@@ -148,8 +148,8 @@ public class JdbcPhoneDaoTest {
         String sql2 = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql2, id2, 5, 5);
 
-        Optional<List<Phone>> twoPhoneList = jdbcPhoneDao.findAll(0, 3, "", SortField.PHONE_ID, SortType.ASC);
-        assertEquals(2, twoPhoneList.get().size());
+        List<Phone> twoPhoneList = jdbcPhoneDao.findAll(0, 3, "", SortField.PHONE_ID, SortType.ASC);
+        assertEquals(2, twoPhoneList.size());
     }
 
     @Test
@@ -170,9 +170,9 @@ public class JdbcPhoneDaoTest {
         String sql2 = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql2, id2, 5, 5);
 
-        Optional<List<Phone>> list = jdbcPhoneDao.findAll(0, 2, "", SortField.PRICE, SortType.DESC);
+       List<Phone> list = jdbcPhoneDao.findAll(0, 2, "", SortField.PRICE, SortType.DESC);
 
-        assertEquals(-1, (list.get().get(0).getPrice().compareTo(list.get().get(1).getPrice())));
+        assertEquals(-1, (list.get(0).getPrice().compareTo(list.get(1).getPrice())));
     }
 
 
@@ -194,15 +194,15 @@ public class JdbcPhoneDaoTest {
         String sql2 = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql2, id2, 5, 5);
 
-        Optional<List<Phone>> list = jdbcPhoneDao.findAll(0, 10, "moto", SortField.PHONE_ID, SortType.ASC);
-        assertEquals(2, list.get().size());
+        List<Phone> list = jdbcPhoneDao.findAll(0, 10, "moto", SortField.PHONE_ID, SortType.ASC);
+        assertEquals(2, list.size());
     }
 
 
     @Test
     public void userBadSearchByModel() {
-        Optional<List<Phone>> list = jdbcPhoneDao.findAll(0, 10, "lalallallalalala", SortField.PHONE_ID, SortType.ASC);
-        assertTrue(list.get().isEmpty());
+        List<Phone> list = jdbcPhoneDao.findAll(0, 10, "lalallallalalala", SortField.PHONE_ID, SortType.ASC);
+        assertTrue(list.isEmpty());
     }
 
 }

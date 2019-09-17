@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/productDetails")
@@ -21,10 +20,9 @@ public class ProductDetailsPageController {
 
     @GetMapping(value = "/{phoneId}")
     public String getPhoneDetails(Model model,
-                                  @PathVariable Optional<Long> phoneId){
+                                  @PathVariable Long phoneId){
 
-        Long id = phoneId.isPresent() ? phoneId.get() : 1000L;
-        Phone phone = phoneService.get(id);
+        Phone phone = phoneService.get(phoneId);
 
         model.addAttribute("phone", phone);
         model.addAttribute("cartItem", new CartItem());

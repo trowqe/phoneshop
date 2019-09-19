@@ -59,28 +59,21 @@ create table stocks (
 
 create table orders (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  subtotal FLOAT,
-  deliveryPrice FLOAT,
-  totalPrice FLOAT,
-  firstName VARCHAR(50) NOT NULL,
-  lastName VARCHAR(50) NOT NULL,
-  deliveryAddress VARCHAR(100) NOT NULL,
-  contactPhoneNo VARCHAR(20) NOT NULL,
+  subtotal        FLOAT,
+  deliveryPrice   FLOAT,
+  totalPrice      FLOAT,
+  firstName VARCHAR(50),
+  lastName VARCHAR(50),
+  deliveryAddress VARCHAR(100),
+  contactPhoneNo VARCHAR(20),
   status VARCHAR(50),
   UNIQUE (id)
 );
 
-create table orderItems(
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  phoneId BIGINT,
+create table orderItems (
+  orderId  BIGINT,
+  phoneId  BIGINT,
   quantity BIGINT,
-  UNIQUE(id),
-  CONSTRAINT FK_orderItems_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-create table order2orderItem (
-  orderId BIGINT,
-  orderItemId BIGINT,
-  CONSTRAINT FK_order2orderItem_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT FK_order2orderItem_orderItemId FOREIGN KEY (orderItemId) REFERENCES orderItems (id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+

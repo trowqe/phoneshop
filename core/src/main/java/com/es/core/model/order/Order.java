@@ -2,6 +2,7 @@ package com.es.core.model.order;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class Order
 {
@@ -102,5 +103,33 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderItems, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", subtotal=" + subtotal +
+                ", deliveryPrice=" + deliveryPrice +
+                ", totalPrice=" + totalPrice +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
+                ", contactPhoneNo='" + contactPhoneNo + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

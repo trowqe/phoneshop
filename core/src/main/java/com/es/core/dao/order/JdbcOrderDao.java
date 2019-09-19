@@ -1,86 +1,117 @@
 package com.es.core.dao.order;
 
-import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderRowMapper;
 import com.es.core.model.order.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class JdbcOrderDao implements OrderDao {
 
-    private final String SQL_SELECT_ALL_ORDERS = "select * from orders ";
+    private static final String UPDATE_ORDER_STATUS_BY_ID = "UPDATE orders SET status = :status where id = :id";
 
-    private final String INSERT_INTO_ORDERS = "insert into orders (subtotal, deliveryPrice, totalPrice," +
-            " firstName, lastName, deliveryAddress, contactPhoneNo, status) " +
-            "  values (:subtotal, :deliveryPrice, :totalPrice, :firstName, :lastName, " +
-            " :deliveryAddress, :contactPhoneNo, :status)";
+    private static final String SELECT_ALL_ORDERS = "SELECT * FROM orders";
 
-    private final String INSERT_INTO_ORDER_ITEMS = "insert into orderitems (phoneId, quantity) values " +
-            "(:phone.id, :quantity)";
+    private static final String SELECT_ORDER_BY_ORDER_ID = "SELECT * FROM orders WHERE id = :id";
 
-    private final String INSERT_INTO_ORDER_2_ORDER_ITEM = "insert into order2orderitem (orderId, orderItemId) " +
-            "values (:orderId, :orderItemId)";
+    private static final String SQL_SAVE_ORDER = "INSERT INTO orders (subtotal, deliveryPrice, totalPrice, " +
+            "firstName, lastName, deliveryAddress, contactPhoneNo, status) " +
+            "VALUES (:subtotal, :deliveryPrice, :totalPrice, :firstName, " +
+            ":lastName, :deliveryAddress, :contactPhoneNo, :status)";
 
-    @Autowired
-    private PhoneDao phoneDao;
+    private static final String SQL_SAVE_ORDER_ITEMS = "INSERT INTO orderItems (orderId, phoneId, quantity) " +
+            "VALUES (:orderId, :phoneId, :quantity)";
+
+    private final String selectItems = "SELECT * FROM orderItems INNER JOIN orders ON orderItems.orderId = :orderId " +
+            "INNER JOIN phones ON phones.id = orderItems.phoneId";
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public Optional<Order> get(Long orderId) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void save(Order order) {
+    public Long saveOrder(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(order);
-        namedParameterJdbcTemplate.update(INSERT_INTO_ORDERS, namedParameters, keyHolder, new String[]{"id"});
-        Long orderId = keyHolder.getKey().longValue();
 
-        for (OrderItem orderItem : order.getOrderItems()) {
-            KeyHolder keyHolder1 = new GeneratedKeyHolder();
-            SqlParameterSource namedParameters1 = new BeanPropertySqlParameterSource(orderItem);
-            namedParameterJdbcTemplate.update(INSERT_INTO_ORDER_ITEMS, namedParameters1, keyHolder1, new String[]{"id"});
-            Long itemId = keyHolder1.getKey().longValue();
-            MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-            mapSqlParameterSource.addValue("orderId", orderId);
-            mapSqlParameterSource.addValue("orderItemId", itemId);
-            namedParameterJdbcTemplate.update(INSERT_INTO_ORDER_2_ORDER_ITEM, mapSqlParameterSource);
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(order);
+        parameterSource.registerSqlType("status", Types.VARCHAR);
+
+        namedParameterJdbcTemplate.update(SQL_SAVE_ORDER, parameterSource, keyHolder, new String[]{"id"});
+        order.setId(keyHolder.getKey().longValue());
+        saveOrderItems(order);
+        return keyHolder.getKey().longValue();
+    }
+
+    private void saveOrderItems(Order order) {
+        List<OrderItem> items = order.getOrderItems();
+        List<MapSqlParameterSource> batchArgs = new ArrayList<>();
+        for (OrderItem item: items) {
+            batchArgs.add(invokeOrderItemGetters(item));
         }
-
-    }
-
-public List<OrderItem> selectOrderItemsByOrderId(Long orderId){
-        String SQL_SELECT_ORDER_ITEMS_BY_ORDER_ID = "SELECT * FROM orderitems where id in " +
-                "(select orderItemId from order2orderitem where orderId = :orderId)";
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("orderId", orderId);
-       // return namedParameterJdbcTemplate.query(SQL_SELECT_ORDER_ITEMS_BY_ORDER_ID, mapSqlParameterSource, );
-    return null;
+        namedParameterJdbcTemplate.batchUpdate(SQL_SAVE_ORDER_ITEMS, batchArgs.toArray(new MapSqlParameterSource[items.size()]));
     }
 
     @Override
-    public List<Order> findAll() {
-        return namedParameterJdbcTemplate.query(SQL_SELECT_ALL_ORDERS, new BeanPropertyRowMapper<>(Order.class));
+    public List<OrderItem> getOrderItems(Long orderId) {
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.addValue("orderId", orderId);
+         return namedParameterJdbcTemplate.query(selectItems, map,
+         new OrderItemRowMapper());
     }
 
     @Override
-    public void updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+    public Optional<Order> getOrder(Long id) {
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.addValue("id", id);
 
+        try {
+            Order order = namedParameterJdbcTemplate.queryForObject(SELECT_ORDER_BY_ORDER_ID, map, new OrderRowMapper());
+            order.setOrderItems(getOrderItems(id));
+            return Optional.of(order);
+        } catch (EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public List<Order> getOrders() {
+        List<Order> orders = new ArrayList<>();
+        try {
+            orders = namedParameterJdbcTemplate.query(SELECT_ALL_ORDERS, new OrderRowMapper());
+            orders.forEach(e->e.setOrderItems(getOrderItems(e.getId())));
+            return orders;
+        } catch (EmptyResultDataAccessException e) {
+            return orders;
+        }
+    }
+
+    @Override
+    public void updateStatusWithId(OrderStatus status, Long orderId) {
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.registerSqlType("status", Types.VARCHAR);
+        map.addValue("id", orderId);
+        map.addValue("status", status);
+        namedParameterJdbcTemplate.update(UPDATE_ORDER_STATUS_BY_ID, map);
+    }
+
+    private MapSqlParameterSource invokeOrderItemGetters(OrderItem orderItem) {
+        MapSqlParameterSource map = new MapSqlParameterSource();
+        map.addValue("phoneId", orderItem.getPhone().getId());
+        map.addValue("orderId", orderItem.getOrder().getId());
+        map.addValue("quantity", orderItem.getQuantity());
+        return map;
     }
 
 }

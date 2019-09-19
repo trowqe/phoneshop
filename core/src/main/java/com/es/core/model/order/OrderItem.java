@@ -4,7 +4,6 @@ import com.es.core.model.phone.Phone;
 
 
 public class OrderItem {
-    private Long id;
     private Phone phone;
     private Order order;
     private Long quantity;
@@ -36,7 +35,6 @@ public class OrderItem {
     @Override
     public String toString() {
         return "OrderItem{" +
-                "id=" + id +
                 ", phone=" + phone +
                 ", order=" + order +
                 ", quantity=" + quantity +

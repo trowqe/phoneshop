@@ -36,7 +36,7 @@ public class CartPageController {
         return "cartPage";
     }
 
-    @PostMapping(value = "/update")
+    @PutMapping
     public String updateCart(
             @Valid CartItemForm cartItemForm,
             BindingResult bindingResultItem,
@@ -62,22 +62,6 @@ public class CartPageController {
         return "redirect:/cartPage";
     }
 
-    @PostMapping(value = "/deleteItem")
-    public String delete(@RequestParam Long phoneId,
-                         @ModelAttribute CartItemForm cartItemForm,
-                         Model model) {
-
-        cartService.remove(phoneId);
-
-        List<Phone> phones = cartService.getPhonesInCart();
-        model.addAttribute("phones", phones);
-
-        Map<Long, CartItem> cartItems = getWebCartItemsFromCartService();
-        cartItemForm.setCartItems(cartItems);
-        model.addAttribute("cartItemsForm", cartItemForm);
-
-        return "redirect:/cartPage";
-    }
 
     private Map<Long, CartItem> getWebCartItemsFromCartService() {
         Map<Long, Long> cartItemsMap = cartService.getCart().getItems();

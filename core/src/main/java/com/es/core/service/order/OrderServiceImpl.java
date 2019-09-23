@@ -75,10 +75,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long placeOrder(Order order) throws OutOfStockException {
-        order.getOrderItems().forEach(i -> {
-            stockService.checkStock(i);
-        });
 
+        order.getOrderItems()
+                .forEach(i->stockService.checkStock(i));
         return orderDao.saveOrder(order);
     }
 }

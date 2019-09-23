@@ -34,7 +34,7 @@ public class ProductListPageController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", phoneService.countTotalPages(userSearch));
 
-        model.addAttribute("cartItem", new CartItem(0L, 1L));
+        model.addAttribute("cartItem", new CartItem());
         return "productList";
     }
 

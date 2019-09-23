@@ -6,10 +6,7 @@
 <template:page>
 
 
-    <c:set var="url" value="${pageContext.request.contextPath}"/>
-
     <spring:url value="/resources/js/addToCart.js" var="addToCart"/>
-    <script> var BASE_URL = '${pageContext.request.contextPath}';</script>
     <script type="text/javascript" src="${addToCart}">
     </script>
 

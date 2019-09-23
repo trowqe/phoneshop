@@ -7,9 +7,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -44,6 +42,11 @@ public class AjaxCartController {
             map.put("totalSum", cartService.countTotalSum());
             return new ResponseEntity<>(map, HttpStatus.OK);
         }
+    }
+
+    @DeleteMapping(value= "/{phoneId}")
+    public void delete(@PathVariable Long phoneId) {
+        cartService.remove(phoneId);
     }
 
 }

@@ -20,15 +20,15 @@ import java.util.Optional;
 @Repository
 public class JdbcPhoneDao implements PhoneDao {
 
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-
     private static final String SQL_GET_PHONE_BY_ID = "SELECT * FROM phones LEFT JOIN phone2color ON " +
             "phones.id=phone2color.phoneId " +
             "LEFT JOIN colors ON phone2color.colorId = colors.id " +
             "WHERE phones.price > 0 AND phones.id = :searchId AND " +
             "((SELECT SUM(stocks.stock) FROM stocks WHERE stocks.phoneId = :searchId ) > 0 )";
+
+    private static final String SQL_COUNT_ALL = "SELECT COUNT(phones.id) FROM phones WHERE phones.price > 0 AND " +
+            "((SELECT SUM(stocks.stock) FROM stocks WHERE stocks.phoneId = phones.id) > 0 )" +
+            " AND model LIKE :search ";
 
     private static final String SQL_SAVE_PHONE = "INSERT INTO phones (brand, model, price, displaySizeInches, weightGr, lengthMm, " +
             "widthMm, heightMm, announced, deviceType, os, displayResolution, pixelDensity, " +
@@ -40,7 +40,15 @@ public class JdbcPhoneDao implements PhoneDao {
             ":displayTechnology, :backCameraMegapixels, :frontCameraMegapixels, :ramGb, :internalStorageGb, " +
             ":batteryCapacityMah, :talkTimeHours, :standByTimeHours, :bluetooth, :positioning, :imageUrl, " +
             ":description)";
-
+    private final String SQL_FIND_ALL = "SELECT * FROM phones " +
+            "WHERE phones.price > 0 AND " +
+            "((SELECT SUM(stocks.stock) FROM stocks WHERE stocks.phoneId = phones.id) > 0 )" +
+            " AND model LIKE :search " +
+            "ORDER BY UPPER ";
+    private final String SQL_LIMIT_OFFSET =
+            " LIMIT :limit  OFFSET :offset";
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public Optional<Phone> get(final Long key) {
 
@@ -58,17 +66,33 @@ public class JdbcPhoneDao implements PhoneDao {
         return keyHolder.getKey().longValue();
     }
 
+    @Override
+    public Long countAllPhones(String searchString) {
+        String search = likeStatement(searchString);
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("search", search);
+        return namedParameterJdbcTemplate.queryForObject(SQL_COUNT_ALL, parameters, Long.class);
+    }
 
     public Optional findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType) {
 
-        String SQL_FIND_ALL = "SELECT * FROM phones " +
-                "WHERE phones.price > 0 AND " +
-                "((SELECT SUM(stocks.stock) FROM stocks WHERE stocks.phoneId = phones.id) > 0 )" +
-                " AND model LIKE '%" + searchString.trim() + "%' " +
-                "ORDER BY UPPER( " + sortField.field + " ) " + sortType.type + " LIMIT " + limit + " OFFSET " + offset;
+        String sql = SQL_FIND_ALL + "( " + sortField.field + " )" + sortType.type + SQL_LIMIT_OFFSET;
+
+        String search = likeStatement(searchString);
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("search", search);
+        parameters.addValue("limit", limit);
+        parameters.addValue("offset", offset);
+
 
         return Optional.of(namedParameterJdbcTemplate.
-                query(SQL_FIND_ALL, new BeanPropertyRowMapper(Phone.class)));
+                query(sql, parameters, new BeanPropertyRowMapper(Phone.class)));
+    }
+
+    private String likeStatement(String string) {
+        if (string == null) return "%";
+        return "%" + string.trim() + "%";
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.es.core.model.cartItem;
+package com.es.phoneshop.web.controller.cart;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -8,8 +8,8 @@ public class CartItem {
     private Long itemId;
 
     @NotNull
-    @Min(value = 1, message = "min 1 item")
-    @Max(value = 100, message = "min 1 item")
+    @Min(value = 1)
+    @Max(value = 100)
     private Long itemQuantity;
 
     public CartItem(Long itemId, Long itemQuantity) {

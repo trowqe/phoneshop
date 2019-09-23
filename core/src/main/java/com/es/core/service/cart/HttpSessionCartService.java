@@ -2,15 +2,11 @@ package com.es.core.service.cart;
 
 import com.es.core.dao.phone.PhoneDao;
 import com.es.core.model.cart.Cart;
-import com.es.core.model.cartItem.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -27,8 +23,11 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void update(Map<Long, Long> items) {
-        throw new UnsupportedOperationException();
+    public void update(Map<Long, Long> newMap) {
+        Map<Long, Long> currMap = cart.getItems();
+        currMap.keySet().removeAll(newMap.keySet());
+        currMap.putAll(newMap);
+        currMap.entrySet().removeIf(v->v.getValue().equals(Long.valueOf(0)));
     }
 
     @Override
@@ -43,19 +42,22 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public BigDecimal countTotalSum() {
-        Map<Long, Long> items = cart.getItems();
-        List<Long> ids = items.keySet().stream().collect(Collectors.toList());
-        Optional<Map<Long, BigDecimal>> pricesByIdOptional = (phoneDao.countTotalPriceByPhoneIds(ids));
-        if (!pricesByIdOptional.isPresent()) return BigDecimal.ZERO;
-        Map<Long, BigDecimal> pricesById = pricesByIdOptional.get();
+
         BigDecimal sum = BigDecimal.ZERO;
+
+        Map<Long, Long> items = cart.getItems();
         for (Map.Entry<Long, Long> entry : items.entrySet()) {
             Long id = entry.getKey();
             Long quantity = entry.getValue();
-            BigDecimal curSum = pricesById.get(Long.valueOf(id)).multiply(BigDecimal.valueOf(quantity));
-            sum = sum.add(curSum);
+            BigDecimal price = phoneDao.get(id).get().getPrice();
+            sum = sum.add(price.multiply(BigDecimal.valueOf(quantity)));
         }
         return sum;
+    }
+
+    @Override
+    public Cart getCart() {
+        return cart;
     }
 }
 

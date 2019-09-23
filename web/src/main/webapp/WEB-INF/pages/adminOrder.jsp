@@ -13,7 +13,6 @@
             <tr>
                 <td>Brand</td>
                 <td>Model</td>
-                <td>Color</td>
                 <td>Display size</td>
                 <td>Quantity</td>
                 <td>Price</td>
@@ -25,14 +24,6 @@
                 <tr>
                     <td>${orderItem.phone.brand}</td>
                     <td>${orderItem.phone.model}</td>
-                    <td>
-                        <c:forEach var="color" items="${orderItem.phone.colors}" varStatus="counter">
-                            ${color.code}
-                            <c:if test="${counter.count != phone.colors.size()}">
-                                ,
-                            </c:if>
-                        </c:forEach>
-                    </td>
                     <td>${orderItem.phone.displaySizeInches}</td>
                     <td>${orderItem.quantity}</td>
                     <td>${orderItem.phone.price}</td>
@@ -83,13 +74,16 @@
             </tr>
             <tr>
                 <td>Additional Information</td>
-                <td>${order.additionalInformation}</td>
+                <td>${order.additionalInfo}</td>
             </tr>
         </table>
-        <a class ="btn" href="<c:url value="/admin/orders"/>"><h4>Back</h4></a>
+
         <form method="post">
-            <input type="submit" <c:if test='${order.status != "NEW"}'> disabled </c:if> name="orderStatus" value="Delivered">
-            <input type="submit" <c:if test='${order.status != "NEW"}'> disabled </c:if> name="orderStatus" value="Rejected">
+            <a href="${pageContext.request.contextPath}/admin/orders/">BACK</a>
+            <button type="submit" name="orderStatus" value="DELIVERED">DELIVERED</button>
+            <button type="submit" name="orderStatus" value="REJECTED">REJECTED</button>
+            <input type="hidden" name="_method" value="PUT"/>
         </form>
+
     </div>
 </template:page>

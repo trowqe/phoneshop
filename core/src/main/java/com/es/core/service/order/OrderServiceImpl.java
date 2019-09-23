@@ -85,4 +85,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findAll() {
         return orderDao.getOrders();
     }
+
+    @Override
+    public void updateStatusWithId(OrderStatus status, Long orderId) {
+        orderDao.updateStatusWithId (status, orderId);
+    }
 }

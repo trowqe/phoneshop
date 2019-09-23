@@ -2,7 +2,6 @@ package com.es.core.dao.order;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
-import com.es.core.model.order.OrderRowMapper;
 import com.es.core.model.order.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,9 +27,9 @@ public class JdbcOrderDao implements OrderDao {
     private static final String SELECT_ORDER_BY_ORDER_ID = "SELECT * FROM orders WHERE id = :id";
 
     private static final String SQL_SAVE_ORDER = "INSERT INTO orders (subtotal, deliveryPrice, totalPrice, " +
-            "firstName, lastName, deliveryAddress, contactPhoneNo, status) " +
+            "firstName, lastName, deliveryAddress, contactPhoneNo, additionalInfo, status) " +
             "VALUES (:subtotal, :deliveryPrice, :totalPrice, :firstName, " +
-            ":lastName, :deliveryAddress, :contactPhoneNo, :status)";
+            ":lastName, :deliveryAddress, :contactPhoneNo, :additionalInfo, :status)";
 
     private static final String SQL_SAVE_ORDER_ITEMS = "INSERT INTO orderItems (orderId, phoneId, quantity) " +
             "VALUES (:orderId, :phoneId, :quantity)";

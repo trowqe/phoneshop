@@ -1,5 +1,7 @@
-package com.es.core.model.order;
+package com.es.core.dao.order;
 
+import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -17,6 +19,8 @@ public class OrderRowMapper implements RowMapper<Order> {
         order.setFirstName(resultSet.getString("orders.firstName"));
         order.setLastName(resultSet.getString("orders.lastName"));
         order.setDeliveryAddress(resultSet.getString("orders.deliveryAddress"));
+        order.setContactPhoneNo(resultSet.getString("orders.contactPhoneNo"));
+        order.setAdditionalInfo(resultSet.getString("orders.additionalInfo"));
         order.setStatus(OrderStatus.valueOf(resultSet.getString("orders.status")));
         return order;
     }

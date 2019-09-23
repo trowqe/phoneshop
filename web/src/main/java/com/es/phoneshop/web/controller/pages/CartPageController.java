@@ -1,5 +1,6 @@
 package com.es.phoneshop.web.controller.pages;
 
+import com.es.core.model.cart.Cart;
 import com.es.core.model.phone.Phone;
 import com.es.core.service.cart.CartService;
 import com.es.phoneshop.web.controller.cart.CartItem;
@@ -23,12 +24,13 @@ public class CartPageController {
     private CartService cartService;
 
     @GetMapping
-    public String getCart(Model model) {
+    public String getCart(Model model, @ModelAttribute Cart cart) {
         CartItemForm cartItemForm = new CartItemForm();
 
         Map<Long, CartItem> cartItems = getWebCartItemsFromCartService();
         cartItemForm.setCartItems(cartItems);
         model.addAttribute("cartItemForm", cartItemForm);
+        model.addAttribute("cart", cart);
 
         List<Phone> phones = cartService.getPhonesInCart();
         model.addAttribute("phones", phones);
@@ -59,7 +61,7 @@ public class CartPageController {
         cartItemForm.setCartItems(cartItems);
         model.addAttribute("cartItemForm", cartItemForm);
 
-        return "cartPage";
+        return "redirect:/cartPage";
     }
 
     @PostMapping(value = "/deleteItem")
@@ -76,7 +78,7 @@ public class CartPageController {
         cartItemForm.setCartItems(cartItems);
         model.addAttribute("cartItemsForm", cartItemForm);
 
-        return "cartPage";
+        return "redirect:/cartPage";
     }
 
     private Map<Long, CartItem> getWebCartItemsFromCartService() {

@@ -2,10 +2,12 @@ package com.es.core.model.stock;
 
 import com.es.core.model.phone.Phone;
 
+import javax.validation.constraints.Min;
 import java.util.Objects;
 
 public class Stock {
     private Phone phone;
+    @Min(1)
     private Integer stock;
     private Integer reserved;
 

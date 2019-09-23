@@ -1,9 +1,14 @@
 package com.es.core.service.order;
 
+import com.es.core.dao.order.OrderDao;
 import com.es.core.model.cart.Cart;
-import com.es.core.model.order.*;
+import com.es.core.model.order.Order;
+import com.es.core.model.order.OrderItem;
+import com.es.core.model.order.OrderStatus;
+import com.es.core.model.order.OutOfStockException;
 import com.es.core.service.cart.CartService;
 import com.es.core.service.phone.PhoneService;
+import com.es.core.service.stock.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,29 +24,45 @@ public class OrderServiceImpl implements OrderService {
     private BigDecimal deliveryPrice;
 
     @Autowired
-    PhoneService phoneService;
+    private PhoneService phoneService;
 
     @Autowired
-    CartService cartService;
+    private CartService cartService;
+
+    @Autowired
+    private StockService stockService;
+
+    @Autowired
+    private OrderDao orderDao;
 
     @Override
-    public Order createOrder(Cart cart, DeliveryInfo deliveryInfo) {
+    public Order getOrderByOrderId(Long orderId) {
+       return orderDao.getOrder(orderId).orElse(null);
+    }
+
+    @Override
+    public Order createOrder(Cart cart) {
         Order order = new Order();
-        List<OrderItem> orderItems = new ArrayList<>();
-        cart.getItems().forEach((k, v) -> {
-            OrderItem orderItem = createOrderItem(k, v, order);
-            orderItems.add(orderItem);
-        });
-        order.setOrderItems(orderItems);
+        order.setOrderItems(setOrderItemsFromCart(cart, order));
         order.setSubtotal(cartService.countTotalSum());
         order.setTotalPrice(cartService.countTotalSum().add(deliveryPrice));
         order.setDeliveryPrice(deliveryPrice);
-        order.setContactPhoneNo(deliveryInfo.getContactPhoneNo());
-        order.setDeliveryAddress(deliveryInfo.getDeliveryAddress());
-        order.setFirstName(deliveryInfo.getFirstName());
-        order.setLastName(deliveryInfo.getLastName());
         order.setStatus(OrderStatus.NEW);
         return order;
+    }
+
+    private List<OrderItem> setOrderItemsFromCart(Cart cart, Order order) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        cart.getItems().forEach((k, v) -> {
+            OrderItem orderItem = createOrderItem(k, v, order);
+            try {
+                stockService.checkStock(orderItem);
+            } catch (OutOfStockException e) {
+                orderItem.setQuantity(0L);
+            }
+            orderItems.add(orderItem);
+        });
+        return orderItems;
     }
 
     private OrderItem createOrderItem(Long phoneId, Long quantity, Order order) {
@@ -53,7 +74,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order) throws OutOfStockException {
-        throw new UnsupportedOperationException("TODO");
+    public Long placeOrder(Order order) throws OutOfStockException {
+        order.getOrderItems().forEach(i -> {
+            stockService.checkStock(i);
+        });
+
+        return orderDao.saveOrder(order);
     }
 }

@@ -3,7 +3,6 @@ package com.es.core.dao.order;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderItem;
-import com.es.core.model.order.OrderRowMapper;
 import com.es.core.model.phone.Phone;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,7 +13,6 @@ import java.sql.SQLException;
 public class OrderItemRowMapper implements RowMapper<OrderItem> {
 
     private BeanPropertyRowMapper<Phone> phoneMapper = new BeanPropertyRowMapper<>(Phone.class);
-    private BeanPropertyRowMapper<Order> orderMapper = new BeanPropertyRowMapper<>(Order.class);
     private OrderRowMapper orderRowMapper = new OrderRowMapper();
 
     @Override

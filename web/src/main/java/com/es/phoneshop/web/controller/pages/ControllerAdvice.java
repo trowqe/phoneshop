@@ -33,6 +33,8 @@ public class ControllerAdvice {
     @ModelAttribute
     public void handleRequest(Model model) {
         model.addAttribute("cartView", cartView);
+        model.addAttribute("cart", cart);
+
     }
 }
 

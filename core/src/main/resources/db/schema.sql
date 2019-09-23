@@ -66,6 +66,7 @@ create table orders (
   lastName VARCHAR(50),
   deliveryAddress VARCHAR(100),
   contactPhoneNo VARCHAR(20),
+  additionalInfo VARCHAR(200),
   status VARCHAR(50),
   UNIQUE (id)
 );

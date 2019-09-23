@@ -3,16 +3,17 @@
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <template:page>
+    <h3>Thank u for your order</h3>
+    <br/>
     <h1>order:</h1>
     <br>
-    <a href="${pageContext.request.contextPath}/cartPage">back to cart</a>
+    <a href="${pageContext.request.contextPath}/productList/">back to product list</a>
 
     <div class="container">
-        <h4>Order</h4>
+        <h4>your order number: ${order.id}</h4>
         <c:choose>
-            <c:when test="${not empty order.totalPrice}">
-                <form:form method="post" action="${pageContext.request.contextPath}/order"
-                           modelAttribute="order">
+            <c:when test="${not empty order}">
+                <form:form modelAttribute="order">
                     <div id="tablePhonesCart">
                         <table id="tableProductsCart" border="1px" width="100%" cellspacing="0"
                                class="table table-striped table-bordered table-hover">
@@ -29,9 +30,7 @@
 
                             <c:forEach var="orderItem" items="${order.orderItems}" varStatus="tagStatus">
                                 <tr>
-                                    <td><form:hidden path="orderItems[${tagStatus.index}].phone.id"
-                                                     readonly="true"/>
-                                    <form:input path="orderItems[${tagStatus.index}].phone.brand"
+                                    <td><form:input path="orderItems[${tagStatus.index}].phone.brand"
                                                     readonly="true"/></td>
                                     <td><form:input path="orderItems[${tagStatus.index}].phone.model"
                                                     readonly="true"/></td>
@@ -41,13 +40,7 @@
                                                     readonly="true"/></td>
                                     <td><form:input path="orderItems[${tagStatus.index}].quantity" readonly="true"/>
 
-                                        <c:set var="quantity" value="${orderItem.quantity}"/>
-                                        <c:if test="${quantity < 1}">
-                                            <p>this phone is out of stock now, please, delete it from cart>
-                                            </p></c:if>
-
-                                        <form:errors path="orderItems[${tagStatus.index}].quantity"/></td>
-
+                                    </td>
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -73,43 +66,37 @@
                                class="table table-striped table-bordered table-hover">
                             <tr>
                                 <td> First Name</td>
-                                <td><form:input path="firstName"/>
-                                    <form:errors path="firstName"/></td>
+                                <td><form:input path="firstName" readonly="true"/>
                             </tr>
                             <tr>
                                 <td>Last Name</td>
-                                <td><form:input path="lastName"/>
-                                    <form:errors path="lastName"/></td>
+                                <td><form:input path="lastName" readonly="true"/>
                             </tr>
                             <tr>
                                 <td>Address</td>
-                                <td><form:input path="deliveryAddress"/>
-                                    <form:errors path="deliveryAddress"/>
-                                    <form:hidden path="status"/></td>
+                                <td><form:input path="deliveryAddress" readonly="true"/>
                             </tr>
 
                             <tr>
                                 <td>Phone</td>
-                                <td><form:input path="contactPhoneNo"/>
-                                    <form:errors path="contactPhoneNo"/></td>
+                                <td><form:input path="contactPhoneNo" readonly="true"/>
                             </tr>
 
                             <tr>
                                 <td>Additional Info</td>
-                                <td><form:input path="additionalInfo"/></td>
+                                <td><form:input path="additionalInfo" readonly="true"/></td>
                             </tr>
 
 
                         </table>
 
                     </div>
-                    <input type="submit" value="Make order" style="width: 100px;">
                 </form:form>
                 <br>
 
             </c:when>
             <c:otherwise>
-                <div id="emptyCart">
+                <div>
                     <h3>you have no order</h3>
                 </div>
             </c:otherwise>

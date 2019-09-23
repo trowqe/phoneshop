@@ -52,7 +52,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <input type="submit" value="Update"  onclick="update()" style="width: 100px;">
+                    <input type="submit" value="Update" style="width: 100px;">
                 </form:form>
                 <br>
                 <form>

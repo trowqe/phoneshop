@@ -80,4 +80,9 @@ public class OrderServiceImpl implements OrderService {
                 .forEach(i->stockService.checkStock(i));
         return orderDao.saveOrder(order);
     }
+
+    @Override
+    public List<Order> findAll() {
+        return orderDao.getOrders();
+    }
 }

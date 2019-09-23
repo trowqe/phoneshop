@@ -21,6 +21,8 @@
         <label>sum: </label>
         <p id="totalSum">${cartView.totalSum}<p>
     </a>
+
+    <a href="${pageContext.request.contextPath}/admin/orders/">admin</a>
 </div>
 
 

@@ -18,6 +18,7 @@ public class CartItem {
     }
 
     public CartItem() {
+
     }
 
     public Long getItemId() {

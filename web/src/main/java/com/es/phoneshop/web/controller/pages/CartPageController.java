@@ -1,16 +1,15 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.model.cart.Cart;
 import com.es.core.model.phone.Phone;
 import com.es.core.service.cart.CartService;
 import com.es.phoneshop.web.controller.cart.CartItem;
 import com.es.phoneshop.web.controller.cart.CartItemForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -20,17 +19,16 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping(value = "/cartPage")
 public class CartPageController {
-    @Resource
+    @Autowired
     private CartService cartService;
 
     @GetMapping
-    public String getCart(Model model, @ModelAttribute Cart cart) {
+    public String getCart(Model model) {
         CartItemForm cartItemForm = new CartItemForm();
 
         Map<Long, CartItem> cartItems = getWebCartItemsFromCartService();
         cartItemForm.setCartItems(cartItems);
         model.addAttribute("cartItemForm", cartItemForm);
-        model.addAttribute("cart", cart);
 
         List<Phone> phones = cartService.getPhonesInCart();
         model.addAttribute("phones", phones);

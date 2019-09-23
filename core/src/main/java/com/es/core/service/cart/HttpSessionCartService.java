@@ -76,5 +76,10 @@ public class HttpSessionCartService implements CartService {
         return phones;
 
     }
+
+    @Override
+    public void clearCart() {
+        cart.getItems().clear();
+    }
 }
 

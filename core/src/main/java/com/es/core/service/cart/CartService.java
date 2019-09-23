@@ -28,4 +28,6 @@ public interface CartService {
 
     List<Phone> getPhonesInCart();
 
+    void clearCart();
+
 }

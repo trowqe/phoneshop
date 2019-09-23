@@ -1,6 +1,5 @@
 package com.es.phoneshop.web.controller.pages;
 
-import com.es.core.dao.phone.ItemNotFoundException;
 import com.es.core.model.cart.Cart;
 import com.es.phoneshop.web.controller.cart.CartView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,8 @@ public class ControllerAdvice {
     private Cart cart;
 
 
-    @ExceptionHandler(ItemNotFoundException.class)
-    public ModelAndView handleItemNotFoundException(ItemNotFoundException ex) {
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleItemNotFoundException(Exception ex) {
         ModelAndView model = new ModelAndView("error");
         model.addObject("message", ex.getMessage());
         model.addObject("statusCode", 404);
@@ -34,7 +33,6 @@ public class ControllerAdvice {
     public void handleRequest(Model model) {
         model.addAttribute("cartView", cartView);
         model.addAttribute("cart", cart);
-
     }
 }
 

@@ -1,4 +1,4 @@
-package com.es.phoneshop.web.controller.pages.admin;
+package com.es.phoneshop.web.controller.pages;
 
 import com.es.core.model.order.Order;
 import com.es.core.model.order.OrderStatus;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/admin/orders")
+@RequestMapping("/admin/orders")
 public class OrdersPageController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class OrdersPageController {
         return "adminOrders";
     }
 
-    @GetMapping(value = "/{orderId}")
+    @GetMapping("/{orderId}")
     public String getOrder(@PathVariable Long orderId, Model model) {
         Order order = orderService.getOrderByOrderId(orderId);
         model.addAttribute("order", order);
@@ -32,10 +32,9 @@ public class OrdersPageController {
     }
 
 
-    @PutMapping(value = "/{orderId}")
-    public String oderInfo3( @PathVariable Long orderId, @RequestParam("orderStatus") String orderStatus, Model model){
-        OrderStatus newOrderStatus = OrderStatus.valueOf(orderStatus);
-        orderService.updateStatusWithId(newOrderStatus, orderId);
+    @PutMapping("/{orderId}")
+    public String oderInfo( @PathVariable Long orderId, @RequestParam("orderStatus") OrderStatus orderStatus, Model model){
+        orderService.updateStatusById(orderStatus, orderId);
         return "redirect:/admin/orders/"+orderId;
     }
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(value = "/ajaxCart")
+@RequestMapping("/ajaxCart")
 
 public class AjaxCartController {
     @Autowired
@@ -26,7 +26,7 @@ public class AjaxCartController {
     @Autowired
     private MessageSource messageSource;
 
-    @PostMapping(value = "/add")
+    @PostMapping("/add")
     public ResponseEntity<Object> addPhone(@Valid CartItem cartItem, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errorMessages = new ArrayList<>();
@@ -44,7 +44,7 @@ public class AjaxCartController {
         }
     }
 
-    @DeleteMapping(value= "/{phoneId}")
+    @DeleteMapping("/{phoneId}")
     public void delete(@PathVariable Long phoneId) {
         cartService.remove(phoneId);
     }

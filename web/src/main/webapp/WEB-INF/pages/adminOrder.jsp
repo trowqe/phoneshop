@@ -78,12 +78,10 @@
             </tr>
         </table>
 
-        <form method="post">
+        <form:form method="put">
             <a href="${pageContext.request.contextPath}/admin/orders/">BACK</a>
             <button type="submit" name="orderStatus" value="DELIVERED">DELIVERED</button>
             <button type="submit" name="orderStatus" value="REJECTED">REJECTED</button>
-            <input type="hidden" name="_method" value="PUT"/>
-        </form>
-
+        </form:form>
     </div>
 </template:page>

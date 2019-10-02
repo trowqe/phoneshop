@@ -9,6 +9,7 @@ import com.es.core.model.phone.Phone;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,6 +36,7 @@ public class JdbcOrderDaoTest {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
     @Test
     public void saveOrder() {
         String sql = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
@@ -46,6 +48,36 @@ public class JdbcOrderDaoTest {
         Long id1 = jdbcPhoneDao.save(phone1);
         jdbcTemplate.update(sql, id1, 5, 5);
         phone1.setId(id1);
+
+
+        Order order = new Order();
+
+        List<OrderItem> items = new ArrayList<>();
+
+        OrderItem orderItem1 = new OrderItem();
+        orderItem1.setQuantity(1L);
+        orderItem1.setOrder(order);
+        orderItem1.setPhone(phone1);
+        items.add(orderItem1);
+
+        order.setOrderItems(items);
+        Long id = jdbcOrderDao.saveOrder(order);
+
+        assertEquals(Long.valueOf(1), id);
+    }
+
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void saveOrderRollBack() {
+        String sql = "INSERT INTO stocks (phoneId, stock, reserved) VALUES (?, ?, ?)";
+
+        Phone phone1 = new Phone();
+        phone1.setBrand("motorola");
+        phone1.setModel("x style");
+        phone1.setPrice(BigDecimal.valueOf(10));
+        Long id1 = jdbcPhoneDao.save(phone1);
+        jdbcTemplate.update(sql, id1, 5, 5);
+        phone1.setId(10L);
 
         Order order = new Order();
 
@@ -147,7 +179,7 @@ public class JdbcOrderDaoTest {
         order.setStatus(OrderStatus.NEW);
         Long id = jdbcOrderDao.saveOrder(order);
 
-        assertEquals(order, jdbcOrderDao.getOrder(id).get());
+        assertEquals(order.getId(), jdbcOrderDao.getOrder(id).get().getId());
     }
 
     @Test
@@ -157,7 +189,7 @@ public class JdbcOrderDaoTest {
 
     @Test
     public void getOrdersWhenNoOrdersInBD() {
-    assertEquals(0, jdbcOrderDao.getOrders().size());
+        assertEquals(0, jdbcOrderDao.getOrders().size());
     }
 
     @Test
@@ -200,7 +232,7 @@ public class JdbcOrderDaoTest {
         order1.setOrderItems(items);
         Long orderId1 = jdbcOrderDao.saveOrder(order1);
 
-        Order order2=new Order();
+        Order order2 = new Order();
         order2.setStatus(OrderStatus.NEW);
         order2.setOrderItems(items);
         Long orderId2 = jdbcOrderDao.saveOrder(order2);
@@ -234,7 +266,7 @@ public class JdbcOrderDaoTest {
         order1.setStatus(OrderStatus.NEW);
         Long orderId1 = jdbcOrderDao.saveOrder(order1);
 
-        jdbcOrderDao.updateStatusWithId(OrderStatus.DELIVERED, orderId1);
+        jdbcOrderDao.updateStatusByOrderId(OrderStatus.DELIVERED, orderId1);
 
         assertEquals(jdbcOrderDao.getOrder(orderId1).get().getStatus(), OrderStatus.DELIVERED);
     }

@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,8 +28,7 @@ public class JdbcStockDao implements StockDao {
 
     @Override
     public Optional<Stock> get(Long key) {
-        Map<String, Number> paramMap = new HashMap<>();
-        paramMap.put("phoneId", key);
+        Map<String, Object> paramMap = Collections.singletonMap("phoneId", key);
         try {
             Stock stock = namedParameterJdbcTemplate.
                     queryForObject(SQL_SELECT_STOCK_BY_ID, paramMap, new BeanPropertyRowMapper<>(Stock.class));

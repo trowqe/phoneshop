@@ -19,7 +19,7 @@
 
     <bean id="messageSource"
           class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename" value="classpath:messages.messages"/>
+        <property name="basename" value="messages.messages"/>
     </bean>
 
     <bean id="cart" class="com.es.core.model.cart.Cart" scope="session" >

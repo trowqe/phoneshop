@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 public class PhoneServiceImplUnitTest {
 
     @InjectMocks
-    private PhoneServiceImpl phoneService = new PhoneServiceImpl();
+    private PhoneServiceImpl phoneService;
 
     @Mock
     private PhoneDao phoneDao;

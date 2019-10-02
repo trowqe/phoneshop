@@ -24,9 +24,9 @@
     </a>
 
     <br>
-    <sec:authentication var="name" property="principal" />
+    <sec:authentication var="principal" property="principal" />
     <sec:authorize access="isAuthenticated()">
-        ${name}
+        ${principal.username}
     </sec:authorize>
     <br>
 

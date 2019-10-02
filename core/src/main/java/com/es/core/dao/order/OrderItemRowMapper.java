@@ -23,8 +23,6 @@ public class OrderItemRowMapper implements RowMapper<OrderItem> {
         phone.setId(resultSet.getLong("phones.id"));
         orderItem.setPhone(phone);
         orderItem.setQuantity(resultSet.getLong("quantity"));
-        //Order order = orderMapper.mapRow(resultSet, resultSet.getRow());
-        //order.setId(resultSet.getLong("orders.id"));
         Order order = orderRowMapper.mapRow(resultSet, i);
         orderItem.setOrder(order);
         return orderItem;

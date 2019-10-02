@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "/productDetails")
+@RequestMapping("/productDetails")
 public class ProductDetailsPageController {
 
     @Autowired
     private PhoneService phoneService;
 
-    @GetMapping(value = "/{phoneId}")
+    @GetMapping("/{phoneId}")
     public String getPhoneDetails(Model model,
                                   @PathVariable Long phoneId){
 

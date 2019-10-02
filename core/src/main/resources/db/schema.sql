@@ -57,6 +57,7 @@ create table stocks (
   CONSTRAINT FK_stocks_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
 create table orders (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   subtotal        FLOAT,
@@ -68,13 +69,14 @@ create table orders (
   contactPhoneNo VARCHAR(20),
   additionalInfo VARCHAR(200),
   status VARCHAR(50),
-  UNIQUE (id)
 );
 
 create table orderItems (
-  orderId  BIGINT,
+  orderId  BIGINT AUTO_INCREMENT,
   phoneId  BIGINT,
   quantity BIGINT,
+  CONSTRAINT FK_orderItems_phoneId FOREIGN KEY (phoneId) REFERENCES phones (id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT FK_orderItems_orderId FOREIGN KEY (orderId) REFERENCES orders (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 

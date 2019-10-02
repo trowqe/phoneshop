@@ -74,7 +74,7 @@ public class JdbcPhoneDao implements PhoneDao {
         return namedParameterJdbcTemplate.queryForObject(SQL_COUNT_ALL, parameters, Long.class);
     }
 
-    public List findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType) {
+    public List<Phone> findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType) {
 
         String sql = String.format(SQL_FIND_ALL, sortField.field, sortType.type);
 
@@ -90,7 +90,6 @@ public class JdbcPhoneDao implements PhoneDao {
     }
 
     private String likeStatement(String string) {
-        if (string == null) return "%";
-        return "%" + string.trim() + "%";
+        return (string == null ?  "%" : "%" + string.trim() + "%");
     }
 }

@@ -5,6 +5,7 @@ import com.es.core.model.order.Order;
 import com.es.core.model.order.OutOfStockException;
 
 public interface OrderService {
+    Order getOrderByOrderId(Long orderId);
     Order createOrder(Cart cart);
-    void placeOrder(Order order) throws OutOfStockException;
+    Long placeOrder(Order order) throws OutOfStockException;
 }

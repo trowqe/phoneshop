@@ -2,11 +2,13 @@ package com.es.core.model.order;
 
 import com.es.core.model.phone.Phone;
 
+import javax.validation.constraints.Min;
+
 
 public class OrderItem {
-    private Long id;
     private Phone phone;
     private Order order;
+    @Min(1)
     private Long quantity;
 
     public Phone getPhone() {
@@ -31,5 +33,14 @@ public class OrderItem {
 
     public void setQuantity(final Long quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderItem{" +
+                ", phone=" + phone +
+                ", order=" + order +
+                ", quantity=" + quantity +
+                '}';
     }
 }

@@ -10,15 +10,16 @@
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
 
+
 </head>
 <body>
 
 <div>
     <a href="${pageContext.request.contextPath}/cartPage/">
-    <label>items: </label>
-    <p id="totalQuantity">${cartView.totalItems}</p>
-    <label>sum: </label>
-    <p id="totalSum">${cartView.totalSum}<p>
+        <label>items: </label>
+        <p id="totalQuantity">${cartView.totalItems}</p>
+        <label>sum: </label>
+        <p id="totalSum">${cartView.totalSum}<p>
     </a>
 </div>
 

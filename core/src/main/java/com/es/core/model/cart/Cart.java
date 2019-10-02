@@ -1,7 +1,5 @@
 package com.es.core.model.cart;
 
-import com.es.core.dao.phone.ItemNotFoundException;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +11,7 @@ public class Cart {
         items.merge(itemId, quantity, Long::sum);
     }
 
-    public void removeItem(Long itemId) throws ItemNotFoundException {
+    public void removeItem(Long itemId){
         items.remove(itemId);
     }
 

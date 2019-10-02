@@ -1,11 +1,17 @@
 package com.es.core.model.order;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class Order
 {
     private Long id;
+    @Valid
     private List<OrderItem> orderItems;
     /**
      *  A sum of order item prices;
@@ -17,10 +23,19 @@ public class Order
      */
     private BigDecimal totalPrice;
 
+    @NotNull
+    @Size(min = 1, max = 35)
     private String firstName;
+    @NotNull
+    @Size(min = 1, max = 35)
     private String lastName;
+    @NotNull
+    @Size(min = 1, max = 35)
     private String deliveryAddress;
+    @NotNull
+    @Pattern(regexp = "^\\+375(17|29|33|44)[0-9]{7}$")
     private String contactPhoneNo;
+    private String additionalInfo;
 
     private OrderStatus status;
 
@@ -102,5 +117,43 @@ public class Order
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public String getAdditionalInfo() {
+        return additionalInfo;
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status);
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", subtotal=" + subtotal +
+                ", deliveryPrice=" + deliveryPrice +
+                ", totalPrice=" + totalPrice +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
+                ", contactPhoneNo='" + contactPhoneNo + '\'' +
+                ", additionalInfo='" + additionalInfo + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

@@ -2,7 +2,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <template:page>
+
+    <spring:url value="/resources/js/deletePhoneByIdFromCart.js" var="deleteFromCart"/>
+    <script type="text/javascript" src="${deleteFromCart}">
+    </script>
 
 
     <a href="${pageContext.request.contextPath}/productList/">back to product list</a>
@@ -11,8 +16,9 @@
         <h4>Cart</h4>
         <c:choose>
             <c:when test="${not empty phones}">
-                <form:form method="post" action="${pageContext.request.contextPath}/cartPage/update"
+                <form:form method="post" action="${pageContext.request.contextPath}/cartPage"
                            modelAttribute="cartItemForm">
+                    <input type="hidden" name="_method" value="PUT">
                     <div id="tablePhonesCart">
                         <table id="tableProductsCart" border="1px" width="100%" cellspacing="0"
                                class="table table-striped table-bordered table-hover">
@@ -44,20 +50,18 @@
                                         <form:errors path="cartItems[${id}].itemQuantity" cssClass="error"/></td>
 
                                     <td>
-                                        <input formmethod="post"
-                                               formaction="<c:url value="/cartPage/delete"/>?phoneId=${phone.id}"
-                                               type="submit" value="Delete">
+                                        <button type="button" form="${pageContext.request.contextPath}/ajaxCart/" id="deleteButton" name="${id}"/>delete</button>
                                     </td>
                                 </tr>
                             </c:forEach>
                             </tbody>
                         </table>
                     </div>
-                    <input type="submit" value="Update" style="width: 100px;">
+                    <input type="submit" value="Update" formmethod="post" style="width: 100px;">
                 </form:form>
                 <br>
                 <form>
-                    <input type="button" value="Order" onClick="">
+                    <a href="${pageContext.request.contextPath}/order">order</a>
                 </form>
             </c:when>
             <c:otherwise>
@@ -67,4 +71,5 @@
             </c:otherwise>
         </c:choose>
     </div>
+
 </template:page>

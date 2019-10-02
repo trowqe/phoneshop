@@ -4,16 +4,14 @@ import com.es.core.model.cart.Cart;
 import com.es.phoneshop.web.controller.cart.CartView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-
-@ControllerAdvice
-public class ExceptionController {
+@RestControllerAdvice
+public class ControllerAdvice {
 
     @Autowired
     private CartView cartView;
@@ -22,14 +20,17 @@ public class ExceptionController {
     private Cart cart;
 
 
-    @ExceptionHandler(value = Exception.class)
-    public String handleError(HttpServletRequest req, HttpServletResponse resp) {
-        return "error";
+    @ExceptionHandler(Exception.class)
+    public ModelAndView handleItemNotFoundException(Exception ex) {
+        ModelAndView model = new ModelAndView("error");
+        model.addObject("message", ex.getMessage());
+        model.addObject("statusCode", 404);
+        return model;
     }
 
 
     @ModelAttribute
-    public void handleRequest(HttpServletRequest request, Model model) {
+    public void handleRequest(Model model) {
         model.addAttribute("cartView", cartView);
         model.addAttribute("cart", cart);
     }

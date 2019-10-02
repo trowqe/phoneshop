@@ -11,28 +11,20 @@
        http://www.springframework.org/schema/aop
        http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-
     <context:property-placeholder location="WEB-INF/conf/application.properties"/>
 
     <import resource="classpath:context/applicationContext-core.xml"/>
     <import resource="classpath:context/applicationContext-demoda.xml"/>
 
-<!--
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="WEB-INF/conf/messages/messages.properties"/>
-        <property name="defaultEncoding" value="UTF-8"/>
-    </bean>
--->
-
     <bean id="messageSource"
           class="org.springframework.context.support.ResourceBundleMessageSource">
-        <property name="basename">
-            <value>messages.messages</value>
-        </property>
+        <property name="basename" value="classpath:messages.messages"/>
     </bean>
 
-    <bean id="cart" class="com.es.core.model.cart.Cart" scope="session">
+    <bean id="cart" class="com.es.core.model.cart.Cart" scope="session" >
         <aop:scoped-proxy/>
     </bean>
+
+    <bean class="org.springframework.web.filter.HiddenHttpMethodFilter"/>
 
 </beans>

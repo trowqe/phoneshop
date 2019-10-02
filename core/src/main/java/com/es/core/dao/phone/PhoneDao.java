@@ -12,7 +12,6 @@ public interface PhoneDao {
 
     Long countAllPhones(String search);
 
-    Optional findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType);
+    List findAll(int offset, int limit, String searchString, SortField sortField, SortType sortType);
 
-    Optional countTotalPriceByPhoneIds(List<Long> idList);
 }

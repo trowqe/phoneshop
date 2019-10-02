@@ -2,23 +2,24 @@ package com.es.phoneshop.web.controller.cart;
 
 import com.es.core.service.cart.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.math.BigDecimal;
 
 @Component
-@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+@RequestScope
 public class CartView {
 
+    private Long totalItems;
+
+    private BigDecimal totalSum;
+
     @Autowired
-    private CartService cartService;
-
-    private Long totalItems = 0L;
-
-    private BigDecimal totalSum = BigDecimal.valueOf(0);
+    public CartView(CartService cartService) {
+        this.totalItems = cartService.countTotalItem();
+        this.totalSum = cartService.countTotalSum();
+    }
 
     public Long getTotalItems() {
         return totalItems;

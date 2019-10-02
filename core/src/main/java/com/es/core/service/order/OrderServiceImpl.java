@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order createOrder(Cart cart) {
         Order order = new Order();
-        order.setOrderItems(setOrderItemsFromCart(cart, order));
+        order.setOrderItems(createOrderItemsFromCart(cart, order));
         order.setSubtotal(cartService.countTotalSum());
         order.setTotalPrice(cartService.countTotalSum().add(deliveryPrice));
         order.setDeliveryPrice(deliveryPrice);
@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private List<OrderItem> setOrderItemsFromCart(Cart cart, Order order) {
+    private List<OrderItem> createOrderItemsFromCart(Cart cart, Order order) {
         List<OrderItem> orderItems = new ArrayList<>();
         cart.getItems().forEach((k, v) -> {
             OrderItem orderItem = createOrderItem(k, v, order);
@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void updateStatusWithId(OrderStatus status, Long orderId) {
-        orderDao.updateStatusWithId (status, orderId);
+    public void updateStatusById(OrderStatus status, Long orderId) {
+        orderDao.updateStatusByOrderId(status, orderId);
     }
 }

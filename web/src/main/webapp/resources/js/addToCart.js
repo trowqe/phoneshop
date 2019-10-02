@@ -4,6 +4,7 @@ $(document).ready(function () {
         e.preventDefault();
         var url = document.getElementById("addForm").getAttribute("action");
         var phoneId = this.id;
+        console.log(phoneId);
         var quantity = document.getElementById(this.id + 'q').value;
 
         var cartItem = {

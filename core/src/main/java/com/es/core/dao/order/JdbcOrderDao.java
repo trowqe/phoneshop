@@ -11,11 +11,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Types;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class JdbcOrderDao implements OrderDao {
@@ -34,12 +37,14 @@ public class JdbcOrderDao implements OrderDao {
     private static final String SQL_SAVE_ORDER_ITEMS = "INSERT INTO orderItems (orderId, phoneId, quantity) " +
             "VALUES (:orderId, :phoneId, :quantity)";
 
-    private final String selectItems = "SELECT * FROM orderItems INNER JOIN orders ON orderItems.orderId = :orderId " +
+    private static final String SELECT_ITEMS = "SELECT * FROM orderItems INNER JOIN orders ON orderItems.orderId = :orderId " +
             "INNER JOIN phones ON phones.id = orderItems.phoneId";
 
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+
+    @Transactional
     @Override
     public Long saveOrder(Order order) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -55,49 +60,40 @@ public class JdbcOrderDao implements OrderDao {
 
     private void saveOrderItems(Order order) {
         List<OrderItem> items = order.getOrderItems();
-        List<MapSqlParameterSource> batchArgs = new ArrayList<>();
-        for (OrderItem item: items) {
-            batchArgs.add(invokeOrderItemGetters(item));
-        }
+        List<MapSqlParameterSource> batchArgs = items.stream()
+                .map(this::mapOrderItemProperties)
+                .collect(Collectors.toList());
         namedParameterJdbcTemplate.batchUpdate(SQL_SAVE_ORDER_ITEMS, batchArgs.toArray(new MapSqlParameterSource[items.size()]));
+
     }
 
-    @Override
     public List<OrderItem> getOrderItems(Long orderId) {
-        MapSqlParameterSource map = new MapSqlParameterSource();
-        map.addValue("orderId", orderId);
-         return namedParameterJdbcTemplate.query(selectItems, map,
-         new OrderItemRowMapper());
+        Map<String, Object> map = Collections.singletonMap("orderId", orderId);
+        return namedParameterJdbcTemplate.query(SELECT_ITEMS, map,
+                new OrderItemRowMapper());
     }
 
     @Override
     public Optional<Order> getOrder(Long id) {
-        MapSqlParameterSource map = new MapSqlParameterSource();
-        map.addValue("id", id);
+        Map<String, Object> map = Collections.singletonMap("id", id);
 
         try {
             Order order = namedParameterJdbcTemplate.queryForObject(SELECT_ORDER_BY_ORDER_ID, map, new OrderRowMapper());
             order.setOrderItems(getOrderItems(id));
             return Optional.of(order);
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
+
     }
 
     @Override
     public List<Order> getOrders() {
-        List<Order> orders = new ArrayList<>();
-        try {
-            orders = namedParameterJdbcTemplate.query(SELECT_ALL_ORDERS, new OrderRowMapper());
-            orders.forEach(e->e.setOrderItems(getOrderItems(e.getId())));
-            return orders;
-        } catch (EmptyResultDataAccessException e) {
-            return orders;
-        }
+        return namedParameterJdbcTemplate.query(SELECT_ALL_ORDERS, new OrderRowMapper());
     }
 
     @Override
-    public void updateStatusWithId(OrderStatus status, Long orderId) {
+    public void updateStatusByOrderId(OrderStatus status, Long orderId) {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.registerSqlType("status", Types.VARCHAR);
         map.addValue("id", orderId);
@@ -105,7 +101,7 @@ public class JdbcOrderDao implements OrderDao {
         namedParameterJdbcTemplate.update(UPDATE_ORDER_STATUS_BY_ID, map);
     }
 
-    private MapSqlParameterSource invokeOrderItemGetters(OrderItem orderItem) {
+    private MapSqlParameterSource mapOrderItemProperties(OrderItem orderItem) {
         MapSqlParameterSource map = new MapSqlParameterSource();
         map.addValue("phoneId", orderItem.getPhone().getId());
         map.addValue("orderId", orderItem.getOrder().getId());

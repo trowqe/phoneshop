@@ -133,12 +133,15 @@ public class Order
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id);
+        return firstName.equals(order.firstName) &&
+                lastName.equals(order.lastName) &&
+                deliveryAddress.equals(order.deliveryAddress) &&
+                contactPhoneNo.equals(order.contactPhoneNo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, subtotal, deliveryPrice, totalPrice, firstName, lastName, deliveryAddress, contactPhoneNo, status);
+        return Objects.hash(firstName, lastName, deliveryAddress, contactPhoneNo);
     }
 
     @Override

@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/order")
+@RequestMapping("/order")
 public class OrderPageController {
     @Autowired
     private OrderService orderService;

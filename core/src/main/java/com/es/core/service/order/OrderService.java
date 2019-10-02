@@ -12,5 +12,5 @@ public interface OrderService {
     Order createOrder(Cart cart);
     Long placeOrder(Order order) throws OutOfStockException;
     List<Order> findAll();
-    void updateStatusWithId(OrderStatus status, Long orderId);
+    void updateStatusById(OrderStatus status, Long orderId);
 }

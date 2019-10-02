@@ -18,7 +18,6 @@
             <c:when test="${not empty phones}">
                 <form:form method="post" action="${pageContext.request.contextPath}/cartPage"
                            modelAttribute="cartItemForm">
-                    <input type="hidden" name="_method" value="PUT">
                     <div id="tablePhonesCart">
                         <table id="tableProductsCart" border="1px" width="100%" cellspacing="0"
                                class="table table-striped table-bordered table-hover">

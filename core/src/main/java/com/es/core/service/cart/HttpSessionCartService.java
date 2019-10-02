@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class HttpSessionCartService implements CartService {
@@ -67,14 +67,9 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public List<Phone> getPhonesInCart() {
-
-        List<Phone> phones = new ArrayList<>();
-        cart.getItems().
-                forEach((id, quantity) -> {
-                    phones.add(phoneService.get(id));
-                });
-        return phones;
-
+        return cart.getItems().keySet().stream()
+                .map(id -> phoneService.get(id))
+                .collect(Collectors.toList());
     }
 
     @Override

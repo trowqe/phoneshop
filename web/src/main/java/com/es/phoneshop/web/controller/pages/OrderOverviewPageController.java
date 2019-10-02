@@ -16,7 +16,7 @@ public class OrderOverviewPageController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping(value = "/{orderId}")
+    @GetMapping("/{orderId}")
     public String getOrder(@PathVariable Long orderId, Model model) {
         Order order = orderService.getOrderByOrderId(orderId);
         model.addAttribute("order", order);

@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="template" tagdir="/WEB-INF/tags/template" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <template:page>
     <div class="container">
         <h4>Admin orders</h4>

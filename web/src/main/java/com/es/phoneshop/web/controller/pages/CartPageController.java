@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = "/cartPage")
+@RequestMapping("/cartPage")
 public class CartPageController {
     @Autowired
     private CartService cartService;
@@ -36,7 +36,7 @@ public class CartPageController {
         return "cartPage";
     }
 
-    @PutMapping
+    @PostMapping
     public String updateCart(
             @Valid CartItemForm cartItemForm,
             BindingResult bindingResultItem,

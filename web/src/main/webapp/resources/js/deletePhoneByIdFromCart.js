@@ -4,7 +4,7 @@ $(document).ready(function () {
         e.preventDefault();
         console.log('delete phone from cart');
         var url = document.getElementById("deleteButton").getAttribute("form");
-        var id=document.getElementById("deleteButton").getAttribute("name");
+        var id=document.getElementById("deleteButton").getAttribute("name");git
 
         $.ajax({
             type: 'DELETE',
